@@ -1,0 +1,49 @@
+# depslib dependency file v1.0
+1618066374 source:c:\users\vhc\desktop\ltnc\game\src\ltexture.cpp
+	"LTexture.h"
+
+1618066374 c:\users\vhc\desktop\ltnc\game\include\ltexture.h
+	<SDL.h>
+	<SDL_image.h>
+	<string>
+	"Config.h"
+	<SDL_ttf.h>
+
+1618066374 c:\users\vhc\desktop\ltnc\game\include\config.h
+
+1618497830 source:c:\users\vhc\desktop\ltnc\game\src\bird.cpp
+	"Bird.h"
+
+1618327948 c:\users\vhc\desktop\ltnc\game\include\bird.h
+	"LTexture.h"
+	"Threat.h"
+
+1618328759 c:\users\vhc\desktop\ltnc\game\include\threat.h
+	"LTexture.h"
+
+1618495768 source:c:\users\vhc\desktop\ltnc\game\src\game.cpp
+	"Game.h"
+
+1618498641 c:\users\vhc\desktop\ltnc\game\include\game.h
+	"LTexture.h"
+	"Bird.h"
+	"Threat.h"
+	"Text.h"
+	<cstdlib>
+	<ctime>
+
+1618497241 source:c:\users\vhc\desktop\ltnc\game\src\threat.cpp
+	"Threat.h"
+
+1618495538 source:c:\users\vhc\desktop\ltnc\game\src\text.cpp
+	"Text.h"
+
+1618328677 c:\users\vhc\desktop\ltnc\game\include\text.h
+	<SDL_ttf.h>
+	<iostream>
+	"LTexture.h"
+
+1618290581 source:c:\users\vhc\desktop\ltnc\game\src\main.cpp
+	"Game.h"
+	<iostream>
+
