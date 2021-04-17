@@ -20,7 +20,7 @@ class Game
 
     private:
         Bird gBird;
-        Threat gThreat;
+        Threat gThreat1, gThreat2;
         Text gText;
         Text mark;
 

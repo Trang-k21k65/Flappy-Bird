@@ -10,9 +10,9 @@ Threat::~Threat()
     threat.free();
 }
 
-void Threat::set_threat_height()
+void Threat::set_threat_height( int val )
 {
-    float height = rand() % 200;
+    int height = rand() % val;
     threat_height = height;
 }
 

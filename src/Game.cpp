@@ -107,7 +107,13 @@ bool Game::loadImage()
 		success = false;
     }
 
-    if( !gThreat.threat.loadFromFile( "image/threat.png", gRenderer ) )
+    if( !gThreat1.threat.loadFromFile( "image/pipe.png", gRenderer ) )
+    {
+        printf( "Failed to load threat texture!\n" );
+		success = false;
+    }
+
+    if( !gThreat2.threat.loadFromFile( "image/pipe.png", gRenderer ) )
     {
         printf( "Failed to load threat texture!\n" );
 		success = false;
@@ -120,13 +126,15 @@ void Game::gameLoop()
 {
     srand ( time(NULL) );
 
+    gThreat1.set_threat_height( 100 );
+    gThreat2.set_threat_height( 400 );
+
     int x = 0;
 
     gText.setColor( 0 );
     gText.loadText( "Mark: " ,gRenderer );
 
     mark.setColor( 0 );
-    int mark_val = 0;
 
     //Main loop flag
     bool quit = false;
@@ -161,11 +169,11 @@ void Game::gameLoop()
 
         for( int i = 0; i < 2; i++ )
         {
-            gThreat.set_x_threat( x + 350*i );
-            gThreat.renderThreat( gRenderer );
+            gThreat1.set_x_threat( x + 350*i );
+            gThreat1.renderThreat( gRenderer );
 
-            gThreat.set_x_threat( x + 350*i + SCREEN_WIDTH );
-            gThreat.renderThreat( gRenderer );
+            gThreat2.set_x_threat( x + 350*i + SCREEN_WIDTH );
+            gThreat2.renderThreat( gRenderer );
         }
 
         gBird.renderBird( gRenderer );
@@ -175,6 +183,8 @@ void Game::gameLoop()
         if( -x == SCREEN_WIDTH ) x = 0;
 
         gBird.handleMoveBird();
+
+
 
         // hien thi diem
         //if( isJump() ) mark_value++;

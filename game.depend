@@ -2,7 +2,7 @@
 1618066374 source:c:\users\vhc\desktop\ltnc\game\src\ltexture.cpp
 	"LTexture.h"
 
-1618066374 c:\users\vhc\desktop\ltnc\game\include\ltexture.h
+1618673862 c:\users\vhc\desktop\ltnc\game\include\ltexture.h
 	<SDL.h>
 	<SDL_image.h>
 	<string>
@@ -11,28 +11,29 @@
 
 1618066374 c:\users\vhc\desktop\ltnc\game\include\config.h
 
-1618497830 source:c:\users\vhc\desktop\ltnc\game\src\bird.cpp
+1618674211 source:c:\users\vhc\desktop\ltnc\game\src\bird.cpp
 	"Bird.h"
 
-1618327948 c:\users\vhc\desktop\ltnc\game\include\bird.h
+1618674212 c:\users\vhc\desktop\ltnc\game\include\bird.h
 	"LTexture.h"
 	"Threat.h"
+	<iostream>
 
-1618328759 c:\users\vhc\desktop\ltnc\game\include\threat.h
+1618670317 c:\users\vhc\desktop\ltnc\game\include\threat.h
 	"LTexture.h"
+	<cstdlib>
+	<ctime>
 
-1618495768 source:c:\users\vhc\desktop\ltnc\game\src\game.cpp
+1618672133 source:c:\users\vhc\desktop\ltnc\game\src\game.cpp
 	"Game.h"
 
-1618498641 c:\users\vhc\desktop\ltnc\game\include\game.h
+1618670317 c:\users\vhc\desktop\ltnc\game\include\game.h
 	"LTexture.h"
 	"Bird.h"
 	"Threat.h"
 	"Text.h"
-	<cstdlib>
-	<ctime>
 
-1618497241 source:c:\users\vhc\desktop\ltnc\game\src\threat.cpp
+1618670317 source:c:\users\vhc\desktop\ltnc\game\src\threat.cpp
 	"Threat.h"
 
 1618495538 source:c:\users\vhc\desktop\ltnc\game\src\text.cpp

@@ -3,8 +3,9 @@
 
 #include "LTexture.h"
 #include "Threat.h"
+#include <iostream>
 
-class Bird : public Threat
+class Bird : Threat
 {
     public:
         Bird();
@@ -13,16 +14,15 @@ class Bird : public Threat
         void renderBird( SDL_Renderer *gRenderer );
         void handleEvents( SDL_Event event );
         void handleMoveBird();
-        bool checkCollision();
-        bool isJump();
+        bool checkCollision( SDL_Rect rect1, SDL_Rect rect2 );
         bool isDie() { return die; }
 
         LTexture bird;
+        bool die;
 
     private:
-        float x_bird, y_bird;
-        float y_val;
-        bool die, jump;
+        int x_bird, y_bird;
+        int y_val;
 
 };
 
