@@ -3,9 +3,8 @@
 
 #include "LTexture.h"
 
-
-#define THREAT_HEIGHT 31
-#define THREAT_WIDTH 40
+#define THREAT_HEIGHT 455
+#define DISTANCE 135
 
 class Threat
 {
@@ -13,10 +12,10 @@ class Threat
         Threat();
         virtual ~Threat();
 
-        void set_x_threat( int pos ) { x_threat = pos; }
-        void set_threat_height( int val );
+        void set_threat_height();
         void renderThreat( SDL_Renderer *gRenderer );
-        int get_threat_height() { return threat_height; }
+        SDL_Rect get_RectCol1();
+        SDL_Rect get_RectCol2();
 
         SDL_Rect clipThreat;
         LTexture threat;

@@ -101,19 +101,25 @@ bool Game::loadImage()
 		success = false;
 	}
 
-	if( !gBird.bird.loadFromFile( "image/bird.png", gRenderer ) )
+	if( !gBird.bird.loadFromFile( "image/bird1.png", gRenderer ) )
     {
         printf( "Failed to load bird texture!\n" );
 		success = false;
     }
 
-    if( !gThreat1.threat.loadFromFile( "image/pipe.png", gRenderer ) )
+    if( !gThreat[0].threat.loadFromFile( "image/pipe.png", gRenderer ) )
     {
         printf( "Failed to load threat texture!\n" );
 		success = false;
     }
 
-    if( !gThreat2.threat.loadFromFile( "image/pipe.png", gRenderer ) )
+    if( !gThreat[1].threat.loadFromFile( "image/pipe.png", gRenderer ) )
+    {
+        printf( "Failed to load threat texture!\n" );
+		success = false;
+    }
+
+    if( !gThreat[2].threat.loadFromFile( "image/pipe.png", gRenderer ) )
     {
         printf( "Failed to load threat texture!\n" );
 		success = false;
@@ -122,19 +128,26 @@ bool Game::loadImage()
     return success;
 }
 
+int Game::menu()
+{
+
+}
+
 void Game::gameLoop()
 {
-    srand ( time(NULL) );
-
-    gThreat1.set_threat_height( 100 );
-    gThreat2.set_threat_height( 400 );
-
     int x = 0;
 
+    gThreat[0].set_threat_height();
+    gThreat[1].set_threat_height();
+    gThreat[2].set_threat_height();
+
     gText.setColor( 0 );
-    gText.loadText( "Mark: " ,gRenderer );
+    gText.loadText( "MARK: ", gRenderer );
 
     mark.setColor( 0 );
+    int mark_val = 0;
+
+    bool up = false;
 
     //Main loop flag
     bool quit = false;
@@ -161,34 +174,64 @@ void Game::gameLoop()
 
         x -= 4;
 
+        // background render
         gBackground.render( gRenderer, x, 0 );
         gBackground.render( gRenderer, SCREEN_WIDTH + x, 0 );
 
         gGround.render( gRenderer, x, gBackground.getHeight() );
         gGround.render( gRenderer, SCREEN_WIDTH + x, gBackground.getHeight() );
 
-        for( int i = 0; i < 2; i++ )
+        // threat (cot) render
+        if( gThreat[0].x_threat >= 0 )
         {
-            gThreat1.set_x_threat( x + 350*i );
-            gThreat1.renderThreat( gRenderer );
+            gThreat[1].x_threat = gThreat[0].x_threat + SCREEN_WIDTH/3;
+            gThreat[2].x_threat = gThreat[1].x_threat + SCREEN_WIDTH/3;
+        }
+        else
+        {
+            gThreat[0] = gThreat[1];
+            gThreat[1] = gThreat[2];
+            gThreat[2].set_threat_height();
+        }
 
-            gThreat2.set_x_threat( x + 350*i + SCREEN_WIDTH );
-            gThreat2.renderThreat( gRenderer );
+        for( int i = 0; i < 3; i++ )
+        {
+            gThreat[i].renderThreat( gRenderer );
         }
 
         gBird.renderBird( gRenderer );
-
-        gText.renderText( gRenderer );
 
         if( -x == SCREEN_WIDTH ) x = 0;
 
         gBird.handleMoveBird();
 
+       /* for( int i = 0; i < 3; i++ )
+        {
+            bool check1 = gBird.checkCollision( gBird.get_RectBird(), gThreat[i].get_RectCol1() );
+            bool check2 = gBird.checkCollision( gBird.get_RectBird(), gThreat[i].get_RectCol2() );
+            if( check1 || check2 )
+            {
+                gBird.die = true;
+                break;
+            }
+        }
 
+        if( gBird.get_RectBird().y < 0 || gBird.get_RectBird().y + gBird.get_RectBird().h < 640 )
+        {
+            gBird.die = true;
+        }
+
+        if( gBird.die == true)
+        {
+            //GAMEOVER
+        }*/
 
         // hien thi diem
         //if( isJump() ) mark_value++;
         //mark.renderText( gRenderer );
+
+        //gText.renderText( gRenderer );
+
 
         SDL_RenderPresent( gRenderer );
     }

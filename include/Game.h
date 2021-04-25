@@ -5,8 +5,6 @@
 #include "Bird.h"
 #include "Threat.h"
 #include "Text.h"
-#include <cstdlib>
-#include <ctime>
 
 class Game
 {
@@ -17,12 +15,12 @@ class Game
         bool init();
         bool loadImage();
         void gameLoop();
+        int menu();
 
     private:
         Bird gBird;
-        Threat gThreat1, gThreat2;
-        Text gText;
-        Text mark;
+        Threat gThreat[3];
+        Text gText, mark;
 
         LTexture gBackground;
         LTexture gGround;

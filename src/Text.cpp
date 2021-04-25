@@ -15,6 +15,7 @@ Text::Text()
 Text::~Text()
 {
     text.free();
+
     TTF_CloseFont( gFont );
 	gFont = NULL;
 

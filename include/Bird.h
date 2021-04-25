@@ -15,14 +15,16 @@ class Bird : Threat
         void handleEvents( SDL_Event event );
         void handleMoveBird();
         bool checkCollision( SDL_Rect rect1, SDL_Rect rect2 );
-        bool isDie() { return die; }
+        bool checkClick( SDL_Event event );
+        SDL_Rect get_RectBird();
 
         LTexture bird;
         bool die;
 
     private:
+
         int x_bird, y_bird;
-        int y_val;
+        int speed;
 
 };
 
