@@ -1,48 +1,55 @@
 # depslib dependency file v1.0
-1618066374 source:c:\users\vhc\desktop\ltnc\game\src\ltexture.cpp
+1619519976 source:c:\users\vhc\desktop\ltnc\game\src\ltexture.cpp
 	"LTexture.h"
 
-1618673862 c:\users\vhc\desktop\ltnc\game\include\ltexture.h
+1619519976 c:\users\vhc\desktop\ltnc\game\include\ltexture.h
 	<SDL.h>
 	<SDL_image.h>
 	<string>
 	"Config.h"
 	<SDL_ttf.h>
 
-1619361160 c:\users\vhc\desktop\ltnc\game\include\config.h
+1619611868 c:\users\vhc\desktop\ltnc\game\include\config.h
 
-1619363124 source:c:\users\vhc\desktop\ltnc\game\src\bird.cpp
+1619796455 source:c:\users\vhc\desktop\ltnc\game\src\bird.cpp
 	"Bird.h"
 
-1619361160 c:\users\vhc\desktop\ltnc\game\include\bird.h
+1619796308 c:\users\vhc\desktop\ltnc\game\include\bird.h
 	"LTexture.h"
 	"Threat.h"
 	<iostream>
+	<SDL_mixer.h>
 
-1618893571 c:\users\vhc\desktop\ltnc\game\include\threat.h
+1619795608 c:\users\vhc\desktop\ltnc\game\include\threat.h
 	"LTexture.h"
 
-1619362648 source:c:\users\vhc\desktop\ltnc\game\src\game.cpp
+1619796772 source:c:\users\vhc\desktop\ltnc\game\src\game.cpp
 	"Game.h"
 
-1619108855 c:\users\vhc\desktop\ltnc\game\include\game.h
-	"LTexture.h"
+1619697872 c:\users\vhc\desktop\ltnc\game\include\game.h
+	"Threat.h"
+	"Menu.h"
 	"Bird.h"
-	"Threat.h"
-	"Text.h"
 
-1618893571 source:c:\users\vhc\desktop\ltnc\game\src\threat.cpp
+1619796711 source:c:\users\vhc\desktop\ltnc\game\src\threat.cpp
 	"Threat.h"
 
-1618676442 source:c:\users\vhc\desktop\ltnc\game\src\text.cpp
+1619616398 source:c:\users\vhc\desktop\ltnc\game\src\text.cpp
 	"Text.h"
 
-1618328677 c:\users\vhc\desktop\ltnc\game\include\text.h
+1619511032 c:\users\vhc\desktop\ltnc\game\include\text.h
 	<SDL_ttf.h>
 	<iostream>
 	"LTexture.h"
 
-1618290581 source:c:\users\vhc\desktop\ltnc\game\src\main.cpp
+1619571071 source:c:\users\vhc\desktop\ltnc\game\src\main.cpp
 	"Game.h"
 	<iostream>
+
+1619795720 source:c:\users\vhc\desktop\ltnc\game\src\menu.cpp
+	"Menu.h"
+
+1619794198 c:\users\vhc\desktop\ltnc\game\include\menu.h
+	"Text.h"
+	"SDL_mixer.h"
 

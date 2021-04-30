@@ -13,7 +13,7 @@ Threat::~Threat()
 void Threat::set_threat_height()
 {
     x_threat = SCREEN_WIDTH;
-    int height = rand() % 400;
+    int height = rand() % 300;
     threat_height = height;
 }
 
@@ -33,9 +33,9 @@ SDL_Rect Threat::get_RectCol1()
 {
     SDL_Rect rect;
 
-    rect.x = x_threat;
-    rect.y = 0;
-    rect.w = 52;
+    rect.x = x_threat + 2;
+    rect.y = -3;
+    rect.w = 50;
     rect.h = THREAT_HEIGHT - threat_height;
 
     return rect;
@@ -45,9 +45,9 @@ SDL_Rect Threat::get_RectCol2()
 {
     SDL_Rect rect;
 
-    rect.x = x_threat;
-    rect.y = DISTANCE + THREAT_HEIGHT - threat_height;
-    rect.w = 52;
+    rect.x = x_threat + 2;
+    rect.y = DISTANCE + THREAT_HEIGHT - threat_height - 4;
+    rect.w = 50;
     rect.h = 640 - rect.y;
 
     return rect;

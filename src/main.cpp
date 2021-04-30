@@ -17,8 +17,17 @@ int main( int argc, char* args[] )
         cout << "Failed to load image!\n";
     }
 
-    gGame.gameLoop();
+    if( !gGame.loadMixer() )
+    {
+        cout << "Failed to load mixer!\n";
+    }
 
+    gGame.gameRender();
+
+   /* bool check = gGame.isGameOver();
+    if( check == false ) load anh Gameover
+
+*/
     return 0;
 }
 

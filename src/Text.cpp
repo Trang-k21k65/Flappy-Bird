@@ -2,9 +2,6 @@
 
 Text::Text()
 {
-    x_text = 50;
-    y_text = 25;
-
     textColor.r = 255;
     textColor.g = 255;
     textColor.b = 255;
@@ -38,6 +35,11 @@ void Text::setColor( const int& type )
     {
         textColor = { 255, 51, 0 };
     }
+
+    if( type == BLUE_TEXT )
+    {
+        textColor = { 0, 0, 255 };
+    }
 }
 
 bool Text::loadText( string s, SDL_Renderer* gRenderer )
@@ -46,7 +48,7 @@ bool Text::loadText( string s, SDL_Renderer* gRenderer )
 	bool success = true;
 
 	//Open the font
-	gFont = TTF_OpenFont( "lazy.ttf", 20 );
+	gFont = TTF_OpenFont( "lazy.ttf", 30 );
 	if( gFont == NULL )
 	{
 		printf( "Failed to load lazy font! SDL_ttf Error: %s\n", TTF_GetError() );
@@ -65,7 +67,7 @@ bool Text::loadText( string s, SDL_Renderer* gRenderer )
 	return success;
 }
 
-void Text::renderText( SDL_Renderer* gRenderer )
+void Text::renderText( SDL_Renderer* gRenderer, int x_text, int y_text )
 {
     text.render( gRenderer, x_text, y_text);
 }

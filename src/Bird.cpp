@@ -21,14 +21,18 @@ void Bird::renderBird( SDL_Renderer *gRenderer )
 
 }
 
-void Bird::handleEvents( SDL_Event event )
+void Bird::handleEvents( SDL_Event& event, Mix_Chunk* wing )
 {
     // mouse event
     if( event.type == SDL_MOUSEBUTTONDOWN )
     {
         if( event.button.button == SDL_BUTTON_LEFT )
         {
-            if( !die ) speed = -4;
+            if( !die )
+            {
+                speed = -4;
+                Mix_PlayChannel( -1, wing, 0);
+            }
         }
     }
 
@@ -36,23 +40,7 @@ void Bird::handleEvents( SDL_Event event )
     {
         if( event.button.button == SDL_BUTTON_LEFT )
         {
-            if( !die )  speed = 4;
-        }
-    }
-    //keyboard event
-    if( event.type == SDL_KEYDOWN)
-    {
-        if( event.key.keysym.sym == SDLK_UP )
-        {
-            if( !die ) speed = -4;
-        }
-    }
-
-    if( event.type == SDL_KEYUP)
-    {
-        if( event.key.keysym.sym == SDLK_UP )
-        {
-            if( !die ) speed = 4;
+            speed = 4;
         }
     }
 }
@@ -60,6 +48,15 @@ void Bird::handleEvents( SDL_Event event )
 void Bird::handleMoveBird()
 {
     y_bird += speed;
+
+    if( y_bird + 33 < 0 )
+    {
+        y_bird = -33;
+    }
+    else if( y_bird + 67 > 640)
+    {
+        y_bird = 573;
+    }
 }
 
 bool Bird::checkCollision( SDL_Rect rect1, SDL_Rect rect2 )
@@ -79,10 +76,10 @@ SDL_Rect Bird::get_RectBird()
 {
     SDL_Rect rect;
 
-    rect.x = x_bird + 23;
-    rect.y = y_bird + 31;
-    rect.w = 55;
-    rect.h = 39;
+    rect.x = x_bird + 28;
+    rect.y = y_bird + 30;
+    rect.w = 40;
+    rect.h = 34;
 
     return rect;
 }

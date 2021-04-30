@@ -1,10 +1,9 @@
 #ifndef GAME_H
 #define GAME_H
 
-#include "LTexture.h"
-#include "Bird.h"
 #include "Threat.h"
-#include "Text.h"
+#include "Menu.h"
+#include "Bird.h"
 
 class Game
 {
@@ -14,17 +13,20 @@ class Game
 
         bool init();
         bool loadImage();
-        void gameLoop();
-        int menu();
+        bool loadMixer();
+        void gameRender();
+        bool isGameOver();
 
     private:
         Bird gBird;
         Threat gThreat[3];
-        Text gText, mark;
+        Text mark;
+        Menu gMenu;
 
+        LTexture get_ready;
         LTexture gBackground;
-        LTexture gGround;
 
+        Mix_Chunk* gMusic[5];
         SDL_Window* gWindow;
         SDL_Renderer* gRenderer;
 };

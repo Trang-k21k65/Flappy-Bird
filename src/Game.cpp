@@ -4,13 +4,28 @@ Game::Game()
 {
     gWindow = NULL;
     gRenderer = NULL;
+
+    for( int i = 0; i < 5; i++)
+    {
+        gMusic[i] = NULL;
+    }
 }
 
 Game::~Game()
 {
+    //Free the sound
+    for( int i = 0; i < 5; i++)
+    {
+        Mix_FreeChunk( gMusic[i] );
+    }
+
+    for( int i = 0; i < 5; i++)
+    {
+        gMusic[i] = NULL;
+    }
+
     //Free loaded images
 	gBackground.free();
-	gGround.free();
 
     //Destroy window
     SDL_DestroyRenderer( gRenderer );
@@ -20,6 +35,7 @@ Game::~Game()
 	gWindow = NULL;
 
 	//Quit SDL subsystems
+	Mix_Quit();
 	IMG_Quit();
 	SDL_Quit();
 }
@@ -78,6 +94,13 @@ bool Game::init()
 					printf( "SDL_ttf could not initialize! SDL_ttf Error: %s\n", TTF_GetError() );
 					success = false;
 				}
+
+				//Initialize SDL_mixer
+				if( Mix_OpenAudio( 44100, MIX_DEFAULT_FORMAT, 2, 2048 ) < 0 )
+				{
+					printf( "SDL_mixer could not initialize! SDL_mixer Error: %s\n", Mix_GetError() );
+					success = false;
+				}
 			}
 		}
 	}
@@ -89,24 +112,21 @@ bool Game::loadImage()
 {
     bool success = true;
 
-    if( !gBackground.loadFromFile( "image/background.png", gRenderer ) )
+    // load background
+    if( !gBackground.loadFromFile( "image/bgr.png", gRenderer ) )
 	{
 		printf( "Failed to load background texture!\n" );
 		success = false;
 	}
 
-	if( !gGround.loadFromFile( "image/ground.png", gRenderer ) )
-	{
-		printf( "Failed to load ground texture!\n" );
-		success = false;
-	}
-
-	if( !gBird.bird.loadFromFile( "image/bird1.png", gRenderer ) )
+	// load bird
+	if( !gBird.bird.loadFromFile( "image/bird.png", gRenderer ) )
     {
         printf( "Failed to load bird texture!\n" );
 		success = false;
     }
 
+    // load threat
     if( !gThreat[0].threat.loadFromFile( "image/pipe.png", gRenderer ) )
     {
         printf( "Failed to load threat texture!\n" );
@@ -128,12 +148,70 @@ bool Game::loadImage()
     return success;
 }
 
-int Game::menu()
+bool Game::loadMixer()
 {
+    bool success = true;
 
+    //Load tap_to_play sound effect
+	gMusic[0] = Mix_LoadWAV( "mixer/tap_to_play.wav" );
+	if( gMusic[0] == NULL )
+	{
+		printf( "Failed to load tap_to_play sound effect! SDL_mixer Error: %s\n", Mix_GetError() );
+		success = false;
+	}
+
+	//Load wing sound effect
+	gMusic[1] = Mix_LoadWAV( "mixer/wing.wav" );
+	if( gMusic[1] == NULL )
+	{
+		printf( "Failed to load wing sound effect! SDL_mixer Error: %s\n", Mix_GetError() );
+		success = false;
+	}
+
+	//Load mark sound effect
+	gMusic[2] = Mix_LoadWAV( "mixer/mark.wav" );
+	if( gMusic[2] == NULL )
+	{
+		printf( "Failed to load mark sound effect! SDL_mixer Error: %s\n", Mix_GetError() );
+		success = false;
+	}
+
+	//Load collision sound effect
+	gMusic[3] = Mix_LoadWAV( "mixer/collision.wav" );
+	if( gMusic[3] == NULL )
+	{
+		printf( "Failed to load collision sound effect! SDL_mixer Error: %s\n", Mix_GetError() );
+		success = false;
+	}
+
+	//Load die sound effect
+	gMusic[4] = Mix_LoadWAV( "mixer/die.wav" );
+	if( gMusic[4] == NULL )
+	{
+		printf( "Failed to load die sound effect! SDL_mixer Error: %s\n", Mix_GetError() );
+		success = false;
+	}
+
+    return success;
 }
 
-void Game::gameLoop()
+bool Game::isGameOver()
+{
+    bool success = false;
+    // check Collision
+    /*
+
+        if( gBird.die == true)
+        {
+            //GAMEOVER
+        }*/
+
+        // hien thi diem
+        //if( isJump() ) mark_value++;
+    return success;
+}
+
+void Game::gameRender()
 {
     int x = 0;
 
@@ -141,16 +219,25 @@ void Game::gameLoop()
     gThreat[1].set_threat_height();
     gThreat[2].set_threat_height();
 
-    gText.setColor( 0 );
-    gText.loadText( "MARK: ", gRenderer );
-
-    mark.setColor( 0 );
-    int mark_val = 0;
-
-    bool up = false;
+    mark.setColor( Text::WHITE_TEXT );
+    //int mark_val = 0;
 
     //Main loop flag
     bool quit = false;
+
+    int start_menu = gMenu.showStart( gRenderer, gMusic[0] );
+    if( start_menu == 1 )
+    {
+        quit = true;
+    }
+    else
+    {
+        int tap_play_menu = gMenu.showTapPlay( gRenderer );
+        if( tap_play_menu == 1 )
+        {
+            quit = true;
+        }
+    }
 
     //Event handler
     SDL_Event e;
@@ -166,7 +253,7 @@ void Game::gameLoop()
             {
                 quit = true;
             }
-            gBird.handleEvents( e );
+            gBird.handleEvents( e, gMusic[1] );
         }
 
         SDL_SetRenderDrawColor( gRenderer, 0xFF, 0xFF, 0xFF, 0xFF );
@@ -174,14 +261,13 @@ void Game::gameLoop()
 
         x -= 4;
 
-        // background render
+        // render background
         gBackground.render( gRenderer, x, 0 );
         gBackground.render( gRenderer, SCREEN_WIDTH + x, 0 );
 
-        gGround.render( gRenderer, x, gBackground.getHeight() );
-        gGround.render( gRenderer, SCREEN_WIDTH + x, gBackground.getHeight() );
+        if( -x == SCREEN_WIDTH ) x = 0;
 
-        // threat (cot) render
+        // render threat (cot)
         if( gThreat[0].x_threat >= 0 )
         {
             gThreat[1].x_threat = gThreat[0].x_threat + SCREEN_WIDTH/3;
@@ -199,40 +285,30 @@ void Game::gameLoop()
             gThreat[i].renderThreat( gRenderer );
         }
 
+        // render bird
         gBird.renderBird( gRenderer );
-
-        if( -x == SCREEN_WIDTH ) x = 0;
-
         gBird.handleMoveBird();
 
-       /* for( int i = 0; i < 3; i++ )
+        // check Collision
+        for( int i = 0; i < 3; i++ )
         {
             bool check1 = gBird.checkCollision( gBird.get_RectBird(), gThreat[i].get_RectCol1() );
             bool check2 = gBird.checkCollision( gBird.get_RectBird(), gThreat[i].get_RectCol2() );
             if( check1 || check2 )
             {
-                gBird.die = true;
+                quit = true;
                 break;
             }
         }
 
-        if( gBird.get_RectBird().y < 0 || gBird.get_RectBird().y + gBird.get_RectBird().h < 640 )
+        if( quit == true )
         {
-            gBird.die = true;
+            gMenu.showGameOver( gRenderer );
         }
 
-        if( gBird.die == true)
-        {
-            //GAMEOVER
-        }*/
-
-        // hien thi diem
-        //if( isJump() ) mark_value++;
         //mark.renderText( gRenderer );
 
-        //gText.renderText( gRenderer );
-
-
         SDL_RenderPresent( gRenderer );
+        SDL_Delay(15);
     }
 }

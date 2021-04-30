@@ -4,25 +4,24 @@
 #include "LTexture.h"
 #include "Threat.h"
 #include <iostream>
+#include <SDL_mixer.h>
 
-class Bird : Threat
+class Bird
 {
     public:
         Bird();
         virtual ~Bird();
 
         void renderBird( SDL_Renderer *gRenderer );
-        void handleEvents( SDL_Event event );
+        void handleEvents( SDL_Event& event, Mix_Chunk* wing );
         void handleMoveBird();
         bool checkCollision( SDL_Rect rect1, SDL_Rect rect2 );
-        bool checkClick( SDL_Event event );
         SDL_Rect get_RectBird();
 
         LTexture bird;
         bool die;
 
     private:
-
         int x_bird, y_bird;
         int speed;
 

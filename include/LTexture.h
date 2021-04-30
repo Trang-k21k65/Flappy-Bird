@@ -20,6 +20,7 @@ class LTexture
 		void free();
 		void render( SDL_Renderer* gRenderer, int x, int y, SDL_Rect* clip = NULL, double angle = 0.0,
                      SDL_Point* center = NULL, SDL_RendererFlip flip = SDL_FLIP_NONE );
+        bool checkFocusMouse( int& x, int& y, SDL_Rect& rect);
 
 		int getWidth();
 		int getHeight();

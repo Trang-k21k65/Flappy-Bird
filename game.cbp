@@ -37,11 +37,13 @@
 		<Unit filename="include/Config.h" />
 		<Unit filename="include/Game.h" />
 		<Unit filename="include/LTexture.h" />
+		<Unit filename="include/Menu.h" />
 		<Unit filename="include/Text.h" />
 		<Unit filename="include/Threat.h" />
 		<Unit filename="src/Bird.cpp" />
 		<Unit filename="src/Game.cpp" />
 		<Unit filename="src/LTexture.cpp" />
+		<Unit filename="src/Menu.cpp" />
 		<Unit filename="src/Text.cpp" />
 		<Unit filename="src/Threat.cpp" />
 		<Unit filename="src/main.cpp" />
