@@ -4,7 +4,7 @@
 #include "LTexture.h"
 
 #define THREAT_HEIGHT 450
-#define DISTANCE 147
+#define BLANK 147
 
 class Threat
 {
@@ -17,6 +17,7 @@ class Threat
 
         SDL_Rect get_RectCol1();
         SDL_Rect get_RectCol2();
+        SDL_Rect get_RectBlank();
 
         LTexture threat;
         int x_threat;

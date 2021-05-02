@@ -15,14 +15,16 @@ class Text
             WHITE_TEXT = 0,
             ORANGE_TEXT = 1,
             RED_TEXT = 2,
-            BLUE_TEXT = 3,
+            GREEN_TEXT = 3,
+            YELLOW_TEXT = 4,
+            BLUE_TEXT = 5,
         };
 
         Text();
         virtual ~Text();
 
         void setColor( const int& type );
-        bool loadText( string s, SDL_Renderer* gRenderer );
+        bool loadText( string s, SDL_Renderer* gRenderer, int size );
         void renderText( SDL_Renderer* gRenderer, int x_text, int y_text );
 
     private:

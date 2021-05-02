@@ -4,32 +4,34 @@ Menu::Menu()
 {
     speed = 0;
 
-    x_mouse = 0;
-    y_mouse = 0;
-
     selected[0] = false;
     selected[1] = false;
+
+    x_mouse = 0;
+    y_mouse = 0;
 }
 
 Menu::~Menu()
 {
-    start.free();
-    gameover.free();
+    bgr.free();
 
     logo.free();
     get_ready.free();
     tap.free();
+    gameover.free();
 
-    play_rect[0].free();
-    play_rect[1].free();
+    start_rect.free();
+    gameover_rect.free();
+
+    SDL_Quit();
 }
 
 int Menu::showStart( SDL_Renderer* gRenderer, Mix_Chunk* tap )
 {
     // load background cho man hinh start
-    if( !start.loadFromFile( "image/bgr.png", gRenderer ) )
+    if( !bgr.loadFromFile( "image/bgr.png", gRenderer ) )
 	{
-		printf( "Failed to load background start texture!\n" );
+		printf( "Failed to load background start menu texture!\n" );
 		return 1;
 	}
 
@@ -41,35 +43,29 @@ int Menu::showStart( SDL_Renderer* gRenderer, Mix_Chunk* tap )
 	}
 
     // load rect chua text option
-    if( !play_rect[0].loadFromFile( "image/play_rect.png", gRenderer ) )
+    if( !start_rect.loadFromFile( "image/start_rect.png", gRenderer ) )
 	{
-		printf( "Failed to load play_rect texture!\n" );
+		printf( "Failed to load start_rect texture!\n" );
 		return 1;
 	}
 
-	if( !play_rect[1].loadFromFile( "image/play_rect.png", gRenderer ) )
-	{
-		printf( "Failed to load play_rect texture!\n" );
-		return 1;
-	}
+    // Set rect chi start_rect
+	start_pos[0].x = (SCREEN_WIDTH - START_WIDTH) / 2;
+	start_pos[0].y = 400;
+	start_pos[0].h = START_HEIGHT;
+	start_pos[0].w = START_WIDTH;
 
-    // Set rect chi play_rect
-	pos_option[0].x = (SCREEN_WIDTH - PLAY_WIDTH) / 2;
-	pos_option[0].y = 400;
-	pos_option[0].h = PLAY_HEIGHT;
-	pos_option[0].w = PLAY_WIDTH;
-
-	pos_option[1].x = (SCREEN_WIDTH - PLAY_WIDTH) / 2;
-	pos_option[1].y = 500;
-	pos_option[1].h = PLAY_HEIGHT;
-	pos_option[1].w = PLAY_WIDTH;
+	start_pos[1].x = (SCREEN_WIDTH - START_WIDTH) / 2;
+	start_pos[1].y = 500;
+	start_pos[1].h = START_HEIGHT;
+	start_pos[1].w = START_WIDTH;
 
 	// Set text trong man hinh start
-	text_option[0].setColor( Text::ORANGE_TEXT );
-	text_option[0].loadText( "Play", gRenderer );
+	start_text[0].setColor( Text::ORANGE_TEXT );
+	start_text[0].loadText( "Play", gRenderer, 30 );
 
-	text_option[1].setColor( Text::ORANGE_TEXT );
-	text_option[1].loadText( "Exit", gRenderer );
+	start_text[1].setColor( Text::ORANGE_TEXT );
+	start_text[1].loadText( "Exit", gRenderer, 30 );
 
 	while(true)
     {
@@ -86,12 +82,12 @@ int Menu::showStart( SDL_Renderer* gRenderer, Mix_Chunk* tap )
 
                     for( int i = 0; i < option; i++ )
                     {
-                        if( checkFocusMouse( x_mouse, y_mouse, pos_option[i] ) )
+                        if( checkFocusMouse( x_mouse, y_mouse, start_pos[i] ) )
                         {
                             if( selected[i] == false )
                             {
                                 selected[i] = true;
-                                //text_option[i].setColor( Text::BLUE_TEXT );
+                                start_text[i].setColor( Text::RED_TEXT );
                             }
                         }
                         else
@@ -99,7 +95,7 @@ int Menu::showStart( SDL_Renderer* gRenderer, Mix_Chunk* tap )
                             if( selected[i] == true )
                             {
                                 selected[i] = false;
-                                //text_option[i].setColor( Text::ORANGE_TEXT );
+                                start_text[i].setColor( Text::ORANGE_TEXT );
                             }
                         }
                     }
@@ -108,12 +104,12 @@ int Menu::showStart( SDL_Renderer* gRenderer, Mix_Chunk* tap )
 
                 case SDL_MOUSEBUTTONDOWN:
                     SDL_GetMouseState( &x_mouse, &y_mouse );
-                    Mix_PlayChannel( -1, tap, 0);
 
                     for( int i = 0; i < option; i++ )
                     {
-                        if( checkFocusMouse( x_mouse, y_mouse, pos_option[i] ) )
+                        if( checkFocusMouse( x_mouse, y_mouse, start_pos[i] ) )
                         {
+                            Mix_PlayChannel( -1, tap, 0);
                             return i;
                         }
                     }
@@ -139,21 +135,21 @@ int Menu::showStart( SDL_Renderer* gRenderer, Mix_Chunk* tap )
         speed -= 4;
 
         // render background start
-        start.render( gRenderer, speed, 0 );
-        start.render( gRenderer, SCREEN_WIDTH + speed, 0 );
+        bgr.render( gRenderer, speed, 0 );
+        bgr.render( gRenderer, SCREEN_WIDTH + speed, 0 );
 
         if( -speed == SCREEN_WIDTH ) speed = 0;
 
         // render logo
         logo.render( gRenderer, 95, 130 );
 
-        // render play_rect
-        play_rect[0].render( gRenderer, pos_option[0].x, pos_option[0].y);
-        play_rect[1].render( gRenderer, pos_option[1].x, pos_option[1].y);
+        // render start_rect
+        start_rect.render( gRenderer, start_pos[0].x, start_pos[0].y);
+        start_rect.render( gRenderer, start_pos[1].x, start_pos[1].y);
 
-        // render text
-        text_option[0].renderText( gRenderer, pos_option[0].x + 28, pos_option[0].y + 23 );
-        text_option[1].renderText( gRenderer, pos_option[1].x + 34, pos_option[1].y + 23 );
+        // render start_text
+        start_text[0].renderText( gRenderer, start_pos[0].x + 28, start_pos[0].y + 23 );
+        start_text[1].renderText( gRenderer, start_pos[1].x + 34, start_pos[1].y + 23 );
 
         SDL_RenderPresent( gRenderer );
     }
@@ -163,14 +159,14 @@ int Menu::showStart( SDL_Renderer* gRenderer, Mix_Chunk* tap )
 
 int Menu::showTapPlay( SDL_Renderer* gRenderer )
 {
-    // load background cho man hinh start
-    if( !start.loadFromFile( "image/bgr.png", gRenderer ) )
+    // load background cho man hinh tap play
+    if( !bgr.loadFromFile( "image/bgr.png", gRenderer ) )
 	{
-		printf( "Failed to load background start texture!\n" );
+		printf( "Failed to load background tap play texture!\n" );
 		return 1;
 	}
 
-    // load get_ready cho tab_play
+    // load get_ready cho tap play
     if( !get_ready.loadFromFile( "image/get_ready.png", gRenderer ) )
 	{
 		printf( "Failed to load get_ready texture!\n" );
@@ -208,9 +204,9 @@ int Menu::showTapPlay( SDL_Renderer* gRenderer )
 
         speed -= 4;
 
-        // render background start
-        start.render( gRenderer, speed, 0 );
-        start.render( gRenderer, SCREEN_WIDTH + speed, 0 );
+        // render background cho tap play
+        bgr.render( gRenderer, speed, 0 );
+        bgr.render( gRenderer, SCREEN_WIDTH + speed, 0 );
 
         if( -speed == SCREEN_WIDTH ) speed = 0;
 
@@ -226,24 +222,144 @@ int Menu::showTapPlay( SDL_Renderer* gRenderer )
     return 1;
 }
 
-void Menu::showGameOver( SDL_Renderer* gRenderer )
+int Menu::showGameOver( SDL_Renderer* gRenderer, Mix_Chunk* tap, string mark, string best_mark )
 {
     // load background cho man hinh gameover
-    if( !start.loadFromFile( "image/bgr.png", gRenderer ) )
+    if( !bgr.loadFromFile( "image/bgr.png", gRenderer ) )
 	{
 		printf( "Failed to load background gameover texture!\n" );
-		//return 1;
+		return 1;
 	}
 
-	// load background cho man hinh gameover
+	// load gameover logo
     if( !gameover.loadFromFile( "image/gameover.png", gRenderer ) )
 	{
 		printf( "Failed to load gameover texture!\n" );
-		//return 1;
+		return 1;
 	}
 
-	start.render( gRenderer, 0, 0 );
-	gameover.render( gRenderer, 130, 150 );
+    // load rect chua gameover_text
+    if( !gameover_rect.loadFromFile( "image/gameover_rect.png", gRenderer ) )
+	{
+		printf( "Failed to load gameover_rect texture!\n" );
+		return 1;
+	}
 
-	SDL_Delay(2000);
+    // Set rect chi gameover_rect
+	gameover_pos[0].x = 130;
+	gameover_pos[0].y = 480;
+	gameover_pos[0].h = GAMEOVER_HEIGHT;
+	gameover_pos[0].w = GAMEOVER_WIDTH;
+
+	gameover_pos[1].x = 370;
+	gameover_pos[1].y = 480;
+	gameover_pos[1].h = GAMEOVER_HEIGHT;
+	gameover_pos[1].w = GAMEOVER_WIDTH;
+
+	// Set text trong man hinh gameover
+	gameover_text[0].setColor( Text::GREEN_TEXT );
+	gameover_text[0].loadText( "Play", gRenderer, 30 );
+
+	gameover_text[1].setColor( Text::GREEN_TEXT );
+	gameover_text[1].loadText( "Exit", gRenderer, 30 );
+
+	gameover_text[2].setColor( Text::GREEN_TEXT );
+	gameover_text[2].loadText( "Score", gRenderer, 30 );
+
+	gameover_text[3].setColor( Text::GREEN_TEXT );
+	gameover_text[3].loadText( "Best", gRenderer, 30 );
+
+	// Set mark_text
+	mark_text[0].setColor( Text::ORANGE_TEXT );
+	mark_text[0].loadText( mark, gRenderer, 30 );
+
+	mark_text[1].setColor( Text:: ORANGE_TEXT );
+	mark_text[1].loadText( mark, gRenderer, 30 );
+
+	while( true )
+    {
+        while( SDL_PollEvent( &mouse_event ) != 0 )
+        {
+            switch( mouse_event.type )
+            {
+                case SDL_QUIT:
+                    return 1;
+                    break;
+
+                case SDL_MOUSEMOTION:
+                    SDL_GetMouseState( &x_mouse, &y_mouse );
+
+                    for( int i = 0; i < option; i++ )
+                    {
+                        if( checkFocusMouse( x_mouse, y_mouse, gameover_pos[i] ) )
+                        {
+                            if( selected[i] == false )
+                            {
+                                selected[i] = true;
+                                //gameover_text[i].setColor( Text::BLUE_TEXT );
+                            }
+                        }
+                        else
+                        {
+                            if( selected[i] == true )
+                            {
+                                selected[i] = false;
+                                //gameover_text[i].setColor( Text::ORANGE_TEXT );
+                            }
+                        }
+                    }
+
+                    break;
+
+                case SDL_MOUSEBUTTONDOWN:
+                    SDL_GetMouseState( &x_mouse, &y_mouse );
+
+                    for( int i = 0; i < option; i++ )
+                    {
+                        if( checkFocusMouse( x_mouse, y_mouse, gameover_pos[i] ) )
+                        {
+                            Mix_PlayChannel( -1, tap, 0);
+                            return i;
+                        }
+                    }
+
+                    break;
+
+                case SDL_KEYDOWN:
+                    if( mouse_event.key.keysym.sym == SDLK_ESCAPE )
+                    {
+                        return 1;
+                    }
+
+                    break;
+
+                default:
+                    break;
+            }
+        }
+
+        bgr.render( gRenderer, 0, 0 );
+        gameover.render( gRenderer, 50, 52 );
+
+        // render gameover_rect
+        gameover_rect.render( gRenderer, gameover_pos[0].x, gameover_pos[0].y);
+        gameover_rect.render( gRenderer, gameover_pos[1].x, gameover_pos[1].y);
+        gameover_rect.render( gRenderer, 130, 350 );
+        gameover_rect.render( gRenderer, 370, 350 );
+
+        // render gameover_text
+        gameover_text[0].renderText( gRenderer, gameover_pos[0].x + 45, gameover_pos[0].y + 31 );
+        gameover_text[1].renderText( gRenderer, gameover_pos[1].x + 50, gameover_pos[1].y + 31 );
+        gameover_text[2].renderText( gRenderer, 130 + 37, 350 + 13 );
+        gameover_text[3].renderText( gRenderer, 370 + 50, 350 + 13 );
+
+        // render mark_text
+        mark_text[0].renderText( gRenderer, 130 + 85, 350 + 50);
+        mark_text[1].renderText( gRenderer, 370 + 85, 350 + 50);
+
+        SDL_RenderPresent( gRenderer );
+
+    }
+
+    return 1;
 }

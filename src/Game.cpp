@@ -14,12 +14,12 @@ Game::Game()
 Game::~Game()
 {
     //Free the sound
-    for( int i = 0; i < 5; i++)
+    for( int i = 0; i < 4; i++)
     {
         Mix_FreeChunk( gMusic[i] );
     }
 
-    for( int i = 0; i < 5; i++)
+    for( int i = 0; i < 4; i++)
     {
         gMusic[i] = NULL;
     }
@@ -169,10 +169,10 @@ bool Game::loadMixer()
 	}
 
 	//Load mark sound effect
-	gMusic[2] = Mix_LoadWAV( "mixer/mark.wav" );
+	gMusic[2] = Mix_LoadWAV( "mixer/score.wav" );
 	if( gMusic[2] == NULL )
 	{
-		printf( "Failed to load mark sound effect! SDL_mixer Error: %s\n", Mix_GetError() );
+		printf( "Failed to load score sound effect! SDL_mixer Error: %s\n", Mix_GetError() );
 		success = false;
 	}
 
@@ -184,131 +184,152 @@ bool Game::loadMixer()
 		success = false;
 	}
 
-	//Load die sound effect
-	gMusic[4] = Mix_LoadWAV( "mixer/die.wav" );
-	if( gMusic[4] == NULL )
-	{
-		printf( "Failed to load die sound effect! SDL_mixer Error: %s\n", Mix_GetError() );
-		success = false;
-	}
-
     return success;
 }
 
-bool Game::isGameOver()
+void Game::gamePlay()
 {
-    bool success = false;
-    // check Collision
-    /*
-
-        if( gBird.die == true)
-        {
-            //GAMEOVER
-        }*/
-
-        // hien thi diem
-        //if( isJump() ) mark_value++;
-    return success;
-}
-
-void Game::gameRender()
-{
-    int x = 0;
-
-    gThreat[0].set_threat_height();
-    gThreat[1].set_threat_height();
-    gThreat[2].set_threat_height();
-
-    mark.setColor( Text::WHITE_TEXT );
-    //int mark_val = 0;
-
-    //Main loop flag
+    // variables adjust gameloop
+    bool play_again = 1;
     bool quit = false;
+    SDL_Event e;
 
+    // show man hinh start
     int start_menu = gMenu.showStart( gRenderer, gMusic[0] );
     if( start_menu == 1 )
     {
         quit = true;
     }
-    else
+
+    // vong lap de chon choi lai hoac thoat
+    do
     {
         int tap_play_menu = gMenu.showTapPlay( gRenderer );
         if( tap_play_menu == 1 )
         {
             quit = true;
         }
-    }
 
-    //Event handler
-    SDL_Event e;
+        // set feature for threat(cot)
+        gThreat[0].set_threat_height();
+        gThreat[1].set_threat_height();
+        gThreat[2].set_threat_height();
 
-    //While application is running
-    while( !quit )
-    {
-        //Handle events on queue
-        while( SDL_PollEvent( &e ) != 0 )
+        // set co-ordinate for bird
+        gBird.set_x_bird( 100 );
+        gBird.set_y_bird( 200 );
+
+        // variable modify speed of bgr
+        int x = 0;
+
+        // variabes modify score
+        gScore.setColor( Text::WHITE_TEXT );
+        bool addScore = true;
+        int score_val = 0, best_score = 0;
+        string score, best;
+
+        //While gameloop is running
+        while( !quit )
         {
-            //User requests quit
-            if( e.type == SDL_QUIT )
+            //Handle events
+            while( SDL_PollEvent( &e ) != 0 )
             {
-                quit = true;
+                if( e.type == SDL_QUIT )
+                {
+                    quit = true;
+                }
+                gBird.handleEvents( e, gMusic[1] );
             }
-            gBird.handleEvents( e, gMusic[1] );
-        }
 
-        SDL_SetRenderDrawColor( gRenderer, 0xFF, 0xFF, 0xFF, 0xFF );
-        SDL_RenderClear( gRenderer );
+            SDL_SetRenderDrawColor( gRenderer, 0xFF, 0xFF, 0xFF, 0xFF );
+            SDL_RenderClear( gRenderer );
 
-        x -= 4;
+            x -= 4;
 
-        // render background
-        gBackground.render( gRenderer, x, 0 );
-        gBackground.render( gRenderer, SCREEN_WIDTH + x, 0 );
+            // render background
+            gBackground.render( gRenderer, x, 0 );
+            gBackground.render( gRenderer, SCREEN_WIDTH + x, 0 );
 
-        if( -x == SCREEN_WIDTH ) x = 0;
+            if( -x == SCREEN_WIDTH ) x = 0;
 
-        // render threat (cot)
-        if( gThreat[0].x_threat >= 0 )
-        {
-            gThreat[1].x_threat = gThreat[0].x_threat + SCREEN_WIDTH/3;
-            gThreat[2].x_threat = gThreat[1].x_threat + SCREEN_WIDTH/3;
-        }
-        else
-        {
-            gThreat[0] = gThreat[1];
-            gThreat[1] = gThreat[2];
-            gThreat[2].set_threat_height();
-        }
-
-        for( int i = 0; i < 3; i++ )
-        {
-            gThreat[i].renderThreat( gRenderer );
-        }
-
-        // render bird
-        gBird.renderBird( gRenderer );
-        gBird.handleMoveBird();
-
-        // check Collision
-        for( int i = 0; i < 3; i++ )
-        {
-            bool check1 = gBird.checkCollision( gBird.get_RectBird(), gThreat[i].get_RectCol1() );
-            bool check2 = gBird.checkCollision( gBird.get_RectBird(), gThreat[i].get_RectCol2() );
-            if( check1 || check2 )
+            // render threat(cot)
+            if( gThreat[0].x_threat >= 0 )
             {
-                quit = true;
-                break;
+                gThreat[1].x_threat = gThreat[0].x_threat + SCREEN_WIDTH / 3;
+                gThreat[2].x_threat = gThreat[1].x_threat + SCREEN_WIDTH / 3;
             }
+            else
+            {
+                gThreat[0] = gThreat[1];
+                gThreat[1] = gThreat[2];
+                gThreat[2].set_threat_height();
+            }
+
+            for( int i = 0; i < 3; i++ )
+            {
+                gThreat[i].renderThreat( gRenderer );
+            }
+
+            // render bird
+            gBird.renderBird( gRenderer );
+            gBird.handleMoveBird();
+
+            // check collision between bird and threat(cot)
+            for( int i = 0; i < 3; i++ )
+            {
+                bool check1 = gBird.checkCollision( gBird.get_RectBird(), gThreat[i].get_RectCol1() );
+                bool check2 = gBird.checkCollision( gBird.get_RectBird(), gThreat[i].get_RectCol2() );
+                if( check1 || check2 || gBird.isDie() == true )
+                {
+                    Mix_PlayChannel( -1, gMusic[3] , 0);
+                    quit = true;
+                    break;
+                }
+            }
+
+            // handle score
+            bool collision = false;
+
+            for( int i = 0; i < 3; i++ )
+            {
+                bool check = gBird.checkCollision( gBird.get_RectBird(), gThreat[i].get_RectBlank() );
+                if( check == true )
+                {
+                    collision = true;
+                    break;
+                }
+            }
+
+            if( collision == true )
+            {
+                if( addScore == true )
+                {
+                    score_val++;
+                    Mix_PlayChannel( -1, gMusic[2], 0);
+                }
+                addScore = false;
+            }
+            else addScore = true;
+
+            score = to_string( score_val );
+            if( best_score < score_val) best_score = score_val;
+            best = to_string( best_score );
+
+            gScore.loadText( score, gRenderer, 50 );
+            gScore.renderText( gRenderer, SCREEN_WIDTH / 2, 100 );
+
+            SDL_RenderPresent( gRenderer );
         }
 
-        if( quit == true )
+        int gameover_menu = gMenu.showGameOver( gRenderer, gMusic[0], score , best );
+
+        if( gameover_menu == 0 )
         {
-            gMenu.showGameOver( gRenderer );
+            quit = false;
+            //best_score = score_val;
+            play_again = 1;
         }
+        else play_again = 0;
 
-        //mark.renderText( gRenderer );
-
-        SDL_RenderPresent( gRenderer );
-        SDL_Delay(15);
-    }
+    }while( play_again != 0 );
 }

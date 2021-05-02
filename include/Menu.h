@@ -4,8 +4,11 @@
 #include "Text.h"
 #include "SDL_mixer.h"
 
-#define PLAY_HEIGHT 74
-#define PLAY_WIDTH 154
+#define START_HEIGHT 74
+#define START_WIDTH 154
+
+#define GAMEOVER_HEIGHT 96
+#define GAMEOVER_WIDTH 200
 
 class Menu: public LTexture
 {
@@ -13,27 +16,29 @@ class Menu: public LTexture
         Menu();
         virtual ~Menu();
 
-        int showStart( SDL_Renderer* gRenderer , Mix_Chunk* tap);
+        int showStart( SDL_Renderer* gRenderer, Mix_Chunk* tap);
         int showTapPlay( SDL_Renderer* gRenderer );
-        void showGameOver( SDL_Renderer* gRenderer );
-
+        int showGameOver( SDL_Renderer* gRenderer, Mix_Chunk* tap, string mark, string best_mark );
 
     private:
-        LTexture get_ready, tap, logo;
+        // backgroung cho menu
+        LTexture bgr;
 
-        // backgroung cho man hinh start
-        LTexture start, gameover;
+        LTexture logo, get_ready, tap, gameover;
 
-        // bien chi rect chua tect option
-        LTexture play_rect[option];
+        // rect chua start_text, gameover_text
+        LTexture start_rect, gameover_rect;
 
-        // text trong man hinh start
-        Text text_option[option];
+        // vi tri cua start_rect, gameover_rect tren man hinh
+        SDL_Rect start_pos[option], gameover_pos[option];
 
-        // vi tri cua play_rect
-        SDL_Rect pos_option[option];
+        // text trong man hinh start, gameover
+        Text start_text[option], gameover_text[option + 2], mark_text[2];
 
-        // bien check toa do cua chuot co nam trong play_rect hay khong
+        // Mouse Events
+        SDL_Event mouse_event;
+
+        // bien check toa do cua chuot co nam trong rect hay khong
         bool selected[option];
 
         // speed cho background
@@ -42,8 +47,7 @@ class Menu: public LTexture
         // vi tri cua chuot trong man hinh start
         int x_mouse, y_mouse;
 
-        // Mouse Events
-        SDL_Event mouse_event;
+
 
 };
 

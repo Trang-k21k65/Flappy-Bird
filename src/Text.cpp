@@ -36,19 +36,29 @@ void Text::setColor( const int& type )
         textColor = { 255, 51, 0 };
     }
 
+    if( type == GREEN_TEXT )
+    {
+        textColor = { 0, 204, 0 };
+    }
+
+    if( type == YELLOW_TEXT )
+    {
+        textColor = { 255, 204, 0 };
+    }
+
     if( type == BLUE_TEXT )
     {
-        textColor = { 0, 0, 255 };
+        textColor = { 50, 150, 255 };
     }
 }
 
-bool Text::loadText( string s, SDL_Renderer* gRenderer )
+bool Text::loadText( string s, SDL_Renderer* gRenderer, int size )
 {
 	//Loading success flag
 	bool success = true;
 
 	//Open the font
-	gFont = TTF_OpenFont( "lazy.ttf", 30 );
+	gFont = TTF_OpenFont( "lazy.ttf", size );
 	if( gFont == NULL )
 	{
 		printf( "Failed to load lazy font! SDL_ttf Error: %s\n", TTF_GetError() );

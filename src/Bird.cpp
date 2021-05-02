@@ -5,7 +5,7 @@ Bird::Bird()
     speed = 0;
 
     x_bird = 100;
-    y_bird = SCREEN_HEIGHT / 2;
+    y_bird = 100;
 
     die = false;
 }
@@ -40,7 +40,7 @@ void Bird::handleEvents( SDL_Event& event, Mix_Chunk* wing )
     {
         if( event.button.button == SDL_BUTTON_LEFT )
         {
-            speed = 4;
+            if( !die ) speed = 4;
         }
     }
 }
@@ -49,13 +49,9 @@ void Bird::handleMoveBird()
 {
     y_bird += speed;
 
-    if( y_bird + 33 < 0 )
+    if( y_bird + 37 < 0 || y_bird + 61 > 640 )
     {
-        y_bird = -33;
-    }
-    else if( y_bird + 67 > 640)
-    {
-        y_bird = 573;
+        die = true;
     }
 }
 
@@ -83,3 +79,4 @@ SDL_Rect Bird::get_RectBird()
 
     return rect;
 }
+

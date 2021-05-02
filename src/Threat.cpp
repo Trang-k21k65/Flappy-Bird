@@ -24,7 +24,7 @@ void Threat::renderThreat( SDL_Renderer *gRenderer )
     clipThreat.w = threat.getWidth();
     clipThreat.h = 640;
 
-    x_threat -= 5;
+    x_threat -= 2;
 
     threat.render( gRenderer, x_threat, 0, &clipThreat);
 }
@@ -46,9 +46,21 @@ SDL_Rect Threat::get_RectCol2()
     SDL_Rect rect;
 
     rect.x = x_threat + 2;
-    rect.y = DISTANCE + THREAT_HEIGHT - threat_height - 4;
+    rect.y = BLANK + THREAT_HEIGHT - threat_height - 4;
     rect.w = 50;
     rect.h = 640 - rect.y;
+
+    return rect;
+}
+
+SDL_Rect Threat::get_RectBlank()
+{
+    SDL_Rect rect;
+
+    rect.x = x_threat + 52;
+    rect.y = THREAT_HEIGHT - threat_height;
+    rect.w = 10;
+    rect.h = BLANK;
 
     return rect;
 }
