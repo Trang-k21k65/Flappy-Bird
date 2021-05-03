@@ -2,7 +2,6 @@
 #define TEXT_H
 
 #include <SDL_ttf.h>
-#include <iostream>
 #include "LTexture.h"
 
 using namespace std;
@@ -14,10 +13,7 @@ class Text
         {
             WHITE_TEXT = 0,
             ORANGE_TEXT = 1,
-            RED_TEXT = 2,
-            GREEN_TEXT = 3,
-            YELLOW_TEXT = 4,
-            BLUE_TEXT = 5,
+            GREEN_TEXT = 2,
         };
 
         Text();

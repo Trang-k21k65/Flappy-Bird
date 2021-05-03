@@ -1,5 +1,4 @@
 #include "Game.h"
-#include <iostream>
 
 using namespace std;
 
@@ -9,17 +8,17 @@ int main( int argc, char* args[] )
 
     if( !gGame.init() )
     {
-        cout << "Failed to initialize!\n" ;
+        printf( "Failed to initialize!\n" );
     }
 
     if( !gGame.loadImage() )
     {
-        cout << "Failed to load image!\n";
+        printf( "Failed to load image!\n" );
     }
 
     if( !gGame.loadMixer() )
     {
-        cout << "Failed to load mixer!\n";
+        printf( "Failed to load mixer!\n" );
     }
 
     gGame.gamePlay();

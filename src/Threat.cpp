@@ -3,6 +3,7 @@
 Threat::Threat()
 {
     x_threat = SCREEN_WIDTH;
+    pause_threat = false;
 }
 
 Threat::~Threat()
@@ -10,6 +11,7 @@ Threat::~Threat()
     threat.free();
 }
 
+// hàm set chiều cao bỏ đi của threat(cột)
 void Threat::set_threat_height()
 {
     x_threat = SCREEN_WIDTH;
@@ -17,6 +19,7 @@ void Threat::set_threat_height()
     threat_height = height;
 }
 
+// hàm vẽ threat(cột) lên màn hình
 void Threat::renderThreat( SDL_Renderer *gRenderer )
 {
     clipThreat.x = 0;
@@ -24,11 +27,12 @@ void Threat::renderThreat( SDL_Renderer *gRenderer )
     clipThreat.w = threat.getWidth();
     clipThreat.h = 640;
 
-    x_threat -= 2;
+    if( !pause_threat ) x_threat -= 3;
 
     threat.render( gRenderer, x_threat, 0, &clipThreat);
 }
 
+// hàm lấy các chỉ số của rect of threat(côt) trên
 SDL_Rect Threat::get_RectCol1()
 {
     SDL_Rect rect;
@@ -41,6 +45,7 @@ SDL_Rect Threat::get_RectCol1()
     return rect;
 }
 
+// hàm lấy các chỉ số của rect of threat(cột) dưới
 SDL_Rect Threat::get_RectCol2()
 {
     SDL_Rect rect;
@@ -53,6 +58,7 @@ SDL_Rect Threat::get_RectCol2()
     return rect;
 }
 
+// hàm lấy các chỉ số của rect điểm: khi bird va chạm với nó (chỉ tính 1 lần) thì cộng thêm 1 điểm
 SDL_Rect Threat::get_RectBlank()
 {
     SDL_Rect rect;

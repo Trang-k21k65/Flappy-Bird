@@ -4,9 +4,6 @@ Menu::Menu()
 {
     speed = 0;
 
-    selected[0] = false;
-    selected[1] = false;
-
     x_mouse = 0;
     y_mouse = 0;
 }
@@ -26,6 +23,7 @@ Menu::~Menu()
     SDL_Quit();
 }
 
+// hàm vẽ màn hình start: trả về 1 là exit; trả về 0 là play
 int Menu::showStart( SDL_Renderer* gRenderer, Mix_Chunk* tap )
 {
     // load background cho man hinh start
@@ -77,31 +75,6 @@ int Menu::showStart( SDL_Renderer* gRenderer, Mix_Chunk* tap )
                     return 1;
                     break;
 
-                case SDL_MOUSEMOTION:
-                    SDL_GetMouseState( &x_mouse, &y_mouse );
-
-                    for( int i = 0; i < option; i++ )
-                    {
-                        if( checkFocusMouse( x_mouse, y_mouse, start_pos[i] ) )
-                        {
-                            if( selected[i] == false )
-                            {
-                                selected[i] = true;
-                                start_text[i].setColor( Text::RED_TEXT );
-                            }
-                        }
-                        else
-                        {
-                            if( selected[i] == true )
-                            {
-                                selected[i] = false;
-                                start_text[i].setColor( Text::ORANGE_TEXT );
-                            }
-                        }
-                    }
-
-                    break;
-
                 case SDL_MOUSEBUTTONDOWN:
                     SDL_GetMouseState( &x_mouse, &y_mouse );
 
@@ -113,7 +86,6 @@ int Menu::showStart( SDL_Renderer* gRenderer, Mix_Chunk* tap )
                             return i;
                         }
                     }
-
                     break;
 
                 case SDL_KEYDOWN:
@@ -121,7 +93,6 @@ int Menu::showStart( SDL_Renderer* gRenderer, Mix_Chunk* tap )
                     {
                         return 1;
                     }
-
                     break;
 
                 default:
@@ -129,7 +100,7 @@ int Menu::showStart( SDL_Renderer* gRenderer, Mix_Chunk* tap )
             }
         }
 
-        SDL_SetRenderDrawColor( gRenderer, 0xFF, 0xFF, 0xFF, 0xFF );
+        SDL_SetRenderDrawColor( gRenderer, 255, 255, 255, 0 );
         SDL_RenderClear( gRenderer );
 
         speed -= 4;
@@ -157,6 +128,7 @@ int Menu::showStart( SDL_Renderer* gRenderer, Mix_Chunk* tap )
     return 1;
 }
 
+// hàm vẽ màn hình tap: trả về 1 là load ảnh failed; trả về 0 là bắt đầu chơi
 int Menu::showTapPlay( SDL_Renderer* gRenderer )
 {
     // load background cho man hinh tap play
@@ -194,12 +166,19 @@ int Menu::showTapPlay( SDL_Renderer* gRenderer )
                     return 0;
                     break;
 
+                case SDL_KEYDOWN:
+                    if( mouse_event.key.keysym.sym == SDLK_ESCAPE )
+                    {
+                        return 1;
+                    }
+                    break;
+
                 default:
                     break;
             }
         }
 
-        SDL_SetRenderDrawColor( gRenderer, 0xFF, 0xFF, 0xFF, 0xFF );
+        SDL_SetRenderDrawColor( gRenderer, 255, 255, 255, 0 );
         SDL_RenderClear( gRenderer );
 
         speed -= 4;
@@ -222,6 +201,7 @@ int Menu::showTapPlay( SDL_Renderer* gRenderer )
     return 1;
 }
 
+// hàm vẽ màn hình gameover: trả về 1 là exit; trả về 0 là play
 int Menu::showGameOver( SDL_Renderer* gRenderer, Mix_Chunk* tap, string mark, string best_mark )
 {
     // load background cho man hinh gameover
@@ -274,7 +254,7 @@ int Menu::showGameOver( SDL_Renderer* gRenderer, Mix_Chunk* tap, string mark, st
 	mark_text[0].loadText( mark, gRenderer, 30 );
 
 	mark_text[1].setColor( Text:: ORANGE_TEXT );
-	mark_text[1].loadText( mark, gRenderer, 30 );
+	mark_text[1].loadText( best_mark, gRenderer, 30 );
 
 	while( true )
     {
@@ -284,31 +264,6 @@ int Menu::showGameOver( SDL_Renderer* gRenderer, Mix_Chunk* tap, string mark, st
             {
                 case SDL_QUIT:
                     return 1;
-                    break;
-
-                case SDL_MOUSEMOTION:
-                    SDL_GetMouseState( &x_mouse, &y_mouse );
-
-                    for( int i = 0; i < option; i++ )
-                    {
-                        if( checkFocusMouse( x_mouse, y_mouse, gameover_pos[i] ) )
-                        {
-                            if( selected[i] == false )
-                            {
-                                selected[i] = true;
-                                //gameover_text[i].setColor( Text::BLUE_TEXT );
-                            }
-                        }
-                        else
-                        {
-                            if( selected[i] == true )
-                            {
-                                selected[i] = false;
-                                //gameover_text[i].setColor( Text::ORANGE_TEXT );
-                            }
-                        }
-                    }
-
                     break;
 
                 case SDL_MOUSEBUTTONDOWN:
@@ -322,7 +277,6 @@ int Menu::showGameOver( SDL_Renderer* gRenderer, Mix_Chunk* tap, string mark, st
                             return i;
                         }
                     }
-
                     break;
 
                 case SDL_KEYDOWN:
@@ -330,13 +284,15 @@ int Menu::showGameOver( SDL_Renderer* gRenderer, Mix_Chunk* tap, string mark, st
                     {
                         return 1;
                     }
-
                     break;
 
                 default:
                     break;
             }
         }
+
+        SDL_SetRenderDrawColor( gRenderer, 255, 255, 255, 0 );
+        SDL_RenderClear( gRenderer );
 
         bgr.render( gRenderer, 0, 0 );
         gameover.render( gRenderer, 50, 52 );

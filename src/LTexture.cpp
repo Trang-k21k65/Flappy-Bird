@@ -14,6 +14,7 @@ LTexture::~LTexture()
     free();
 }
 
+// hàm load ảnh từ đường dẫn truyền vào
 bool LTexture::loadFromFile( string path, SDL_Renderer* gRenderer )
 {
 	//Get rid of preexisting texture
@@ -55,6 +56,7 @@ bool LTexture::loadFromFile( string path, SDL_Renderer* gRenderer )
 	return mTexture != NULL;
 }
 
+// hàm tạo ảnh từ chữ
 bool LTexture::loadFromRenderedText( string textureText, SDL_Color textColor, SDL_Renderer* gRenderer, TTF_Font *gFont )
 {
 	//Get rid of preexisting texture
@@ -101,6 +103,7 @@ void LTexture::free()
 	}
 }
 
+// hàm render texture lên màn hình tại vị trí x, y mà ta truyền vào
 void LTexture::render( SDL_Renderer* gRenderer, int x, int y, SDL_Rect* clip, double angle, SDL_Point* center, SDL_RendererFlip flip )
 {
 	//Set rendering space and render to screen
@@ -127,6 +130,7 @@ int LTexture::getHeight()
 	return mHeight;
 }
 
+// hàm check xem điểm có tọa độ (x, y) có nằm trong rect hay không
 bool LTexture::checkFocusMouse( int& x, int& y, SDL_Rect& rect)
 {
      if( x > rect.x && x < rect.x + rect.w &&

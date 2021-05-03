@@ -3,9 +3,9 @@
 
 #include <SDL.h>
 #include <SDL_image.h>
+#include <SDL_ttf.h>
 #include <string>
 #include "Config.h"
-#include <SDL_ttf.h>
 
 using namespace std;
 
@@ -13,7 +13,7 @@ class LTexture
 {
 	public:
 		LTexture();
-		~LTexture();
+		virtual ~LTexture();
 
 		bool loadFromFile( string path, SDL_Renderer* gRenderer );
 		bool loadFromRenderedText( string textureText, SDL_Color textColor, SDL_Renderer* gRenderer, TTF_Font *gFont );

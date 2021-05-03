@@ -21,6 +21,7 @@ class Threat
 
         LTexture threat;
         int x_threat;
+        bool pause_threat;
 
     private:
         SDL_Rect clipThreat;

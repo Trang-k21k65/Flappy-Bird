@@ -23,7 +23,6 @@ class Menu: public LTexture
     private:
         // backgroung cho menu
         LTexture bgr;
-
         LTexture logo, get_ready, tap, gameover;
 
         // rect chua start_text, gameover_text
@@ -35,19 +34,14 @@ class Menu: public LTexture
         // text trong man hinh start, gameover
         Text start_text[option], gameover_text[option + 2], mark_text[2];
 
+        // speed cho background khi ở màn hình menu
+        int speed;
+
         // Mouse Events
         SDL_Event mouse_event;
 
-        // bien check toa do cua chuot co nam trong rect hay khong
-        bool selected[option];
-
-        // speed cho background
-        int speed;
-
-        // vi tri cua chuot trong man hinh start
+        // vi tri cua chuot trong man hinh
         int x_mouse, y_mouse;
-
-
 
 };
 

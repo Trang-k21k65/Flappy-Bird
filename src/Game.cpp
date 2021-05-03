@@ -2,6 +2,9 @@
 
 Game::Game()
 {
+    score_val = 0;
+    best_score = 0;
+
     gWindow = NULL;
     gRenderer = NULL;
 
@@ -26,6 +29,8 @@ Game::~Game()
 
     //Free loaded images
 	gBackground.free();
+	play.free();
+	pause.free();
 
     //Destroy window
     SDL_DestroyRenderer( gRenderer );
@@ -40,6 +45,7 @@ Game::~Game()
 	SDL_Quit();
 }
 
+// hàm khởi tạo window, bút vẽ, thư viện ảnh & kiểu ảnh, thư viện font chữ, thư viện mixer
 bool Game::init()
 {
 	//Initialization flag
@@ -78,7 +84,7 @@ bool Game::init()
 			else
 			{
 				//Initialize renderer color
-				SDL_SetRenderDrawColor( gRenderer, 0xFF, 0xFF, 0xFF, 0xFF );
+				SDL_SetRenderDrawColor( gRenderer, 255, 255, 255, 0 );
 
 				//Initialize PNG loading
 				int imgFlags = IMG_INIT_PNG;
@@ -108,6 +114,7 @@ bool Game::init()
 	return success;
 }
 
+// hàm load ảnh trong màn hình chơi chính
 bool Game::loadImage()
 {
     bool success = true;
@@ -116,6 +123,20 @@ bool Game::loadImage()
     if( !gBackground.loadFromFile( "image/bgr.png", gRenderer ) )
 	{
 		printf( "Failed to load background texture!\n" );
+		success = false;
+	}
+
+	// load icon ở trạng thái đang chơi
+    if( !play.loadFromFile( "image/play_icon.png", gRenderer ) )
+	{
+		printf( "Failed to load play_icon texture!\n" );
+		success = false;
+	}
+
+	// load icon ở trạng thái pause
+    if( !pause.loadFromFile( "image/pause_icon.png", gRenderer ) )
+	{
+		printf( "Failed to load pause_icon texture!\n" );
 		success = false;
 	}
 
@@ -148,6 +169,7 @@ bool Game::loadImage()
     return success;
 }
 
+// hàm load âm thanh
 bool Game::loadMixer()
 {
     bool success = true;
@@ -187,23 +209,25 @@ bool Game::loadMixer()
     return success;
 }
 
+// hàm viết chương trình chính trong game
 void Game::gamePlay()
 {
     // variables adjust gameloop
-    bool play_again = 1;
+    bool play_again = 1; // 1: chơi tiếp; 0: thoát
     bool quit = false;
     SDL_Event e;
 
-    // show man hinh start
+    // show màn hình start lúc bắt đầu game
     int start_menu = gMenu.showStart( gRenderer, gMusic[0] );
     if( start_menu == 1 )
     {
         quit = true;
     }
 
-    // vong lap de chon choi lai hoac thoat
+    // vòng lặp do-while để chọn chơi lại hay thoát game
     do
     {
+        // show màn hình tap play
         int tap_play_menu = gMenu.showTapPlay( gRenderer );
         if( tap_play_menu == 1 )
         {
@@ -215,36 +239,66 @@ void Game::gamePlay()
         gThreat[1].set_threat_height();
         gThreat[2].set_threat_height();
 
-        // set co-ordinate for bird
-        gBird.set_x_bird( 100 );
-        gBird.set_y_bird( 200 );
+        // set co-ordinate at first for bird
+        gBird.set_x_bird( 150 );
+        gBird.set_y_bird( 150 );
 
-        // variable modify speed of bgr
+        // variable denotes speed of background at main play screen
         int x = 0;
 
-        // variabes modify score
+        // variables denote score
         gScore.setColor( Text::WHITE_TEXT );
-        bool addScore = true;
-        int score_val = 0, best_score = 0;
+        score_val = 0;
         string score, best;
+        bool collision = false; // biến = false nếu bird không va chạm với rect điểm; = true nếu va chạm
+        bool addScore = true; // biến kiểm tra xem điểm có cộng thêm hay không
+
+        // variables denote play/pause
+        SDL_Rect icon_rect = { 50, 50, 40, 40 };
+        int xpos = 0, ypos = 0; // tọa độ chuột trên màn hình
+        int count = 0; // count chẵn thì ở trạng thái play; count lẻ thì ở trạng thái pause
 
         //While gameloop is running
         while( !quit )
         {
             //Handle events
-            while( SDL_PollEvent( &e ) != 0 )
+            while( SDL_PollEvent(&e) != 0 )
             {
                 if( e.type == SDL_QUIT )
                 {
                     quit = true;
                 }
+
+                if( e.type == SDL_MOUSEMOTION )
+                {
+                    SDL_GetMouseState( &xpos, &ypos );
+
+                    if( checkFocusMouse( xpos, ypos, icon_rect ) )
+                    {
+                        gBird.is_click_icon = true;
+                    }
+                    else gBird.is_click_icon = false;
+                }
+
+                if( e.type == SDL_MOUSEBUTTONDOWN )
+                {
+                    SDL_GetMouseState( &xpos, &ypos );
+
+                    if( checkFocusMouse( xpos, ypos, icon_rect ) )
+                    {
+                        Mix_PlayChannel( -1, gMusic[0], 0 );
+                        count++;
+                    }
+                }
+
                 gBird.handleEvents( e, gMusic[1] );
             }
 
-            SDL_SetRenderDrawColor( gRenderer, 0xFF, 0xFF, 0xFF, 0xFF );
+            SDL_SetRenderDrawColor( gRenderer, 255, 255, 255, 0 );
             SDL_RenderClear( gRenderer );
 
-            x -= 4;
+            if( count % 2 == 1 ) x -= 0;
+            else x -= 4;
 
             // render background
             gBackground.render( gRenderer, x, 0 );
@@ -270,6 +324,27 @@ void Game::gamePlay()
                 gThreat[i].renderThreat( gRenderer );
             }
 
+            // render play, pause icon and handle play/pause option
+            play.render( gRenderer, icon_rect.x, icon_rect.y );
+            if( count % 2 == 1 )
+            {
+                pause.render( gRenderer, icon_rect.x, icon_rect.y );
+                for( int i = 0; i < 3; i++ )
+                {
+                    gThreat[i].pause_threat = true;
+                }
+                gBird.pause_bird = true;
+            }
+            else
+            {
+                play.render( gRenderer, icon_rect.x, icon_rect.y );
+                for( int i = 0; i < 3; i++ )
+                {
+                    gThreat[i].pause_threat = false;
+                }
+                gBird.pause_bird = false;
+            }
+
             // render bird
             gBird.renderBird( gRenderer );
             gBird.handleMoveBird();
@@ -287,9 +362,7 @@ void Game::gamePlay()
                 }
             }
 
-            // handle score
-            bool collision = false;
-
+            // xử lí điểm
             for( int i = 0; i < 3; i++ )
             {
                 bool check = gBird.checkCollision( gBird.get_RectBird(), gThreat[i].get_RectBlank() );
@@ -298,6 +371,7 @@ void Game::gamePlay()
                     collision = true;
                     break;
                 }
+                else collision = false;
             }
 
             if( collision == true )
@@ -312,21 +386,23 @@ void Game::gamePlay()
             else addScore = true;
 
             score = to_string( score_val );
-            if( best_score < score_val) best_score = score_val;
-            best = to_string( best_score );
 
+            // hiển thị điểm trên màn hình
             gScore.loadText( score, gRenderer, 50 );
             gScore.renderText( gRenderer, SCREEN_WIDTH / 2, 100 );
 
             SDL_RenderPresent( gRenderer );
         }
 
+        if( best_score < score_val ) best_score = score_val;
+        best = to_string( best_score );
+
+        // hiển thị màn hình gameover khi chơi thua
         int gameover_menu = gMenu.showGameOver( gRenderer, gMusic[0], score , best );
 
         if( gameover_menu == 0 )
         {
             quit = false;
-            //best_score = score_val;
             play_again = 1;
         }
         else play_again = 0;

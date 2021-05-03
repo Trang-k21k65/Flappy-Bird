@@ -1,56 +1,51 @@
 # depslib dependency file v1.0
-1619519976 source:c:\users\vhc\desktop\ltnc\game\src\ltexture.cpp
+1620013381 source:c:\users\vhc\desktop\ltnc\game\src\ltexture.cpp
 	"LTexture.h"
 
-1619519976 c:\users\vhc\desktop\ltnc\game\include\ltexture.h
+1620031521 c:\users\vhc\desktop\ltnc\game\include\ltexture.h
 	<SDL.h>
 	<SDL_image.h>
+	<SDL_ttf.h>
 	<string>
 	"Config.h"
-	<SDL_ttf.h>
 
-1619611868 c:\users\vhc\desktop\ltnc\game\include\config.h
+1620033121 c:\users\vhc\desktop\ltnc\game\include\config.h
 
-1619959726 source:c:\users\vhc\desktop\ltnc\game\src\bird.cpp
+1620033408 source:c:\users\vhc\desktop\ltnc\game\src\bird.cpp
 	"Bird.h"
 
-1619961574 c:\users\vhc\desktop\ltnc\game\include\bird.h
-	"LTexture.h"
+1620033121 c:\users\vhc\desktop\ltnc\game\include\bird.h
 	"Threat.h"
-	<iostream>
 	<SDL_mixer.h>
 
-1619892421 c:\users\vhc\desktop\ltnc\game\include\threat.h
+1619979257 c:\users\vhc\desktop\ltnc\game\include\threat.h
 	"LTexture.h"
 
-1619964133 source:c:\users\vhc\desktop\ltnc\game\src\game.cpp
+1620027041 source:c:\users\vhc\desktop\ltnc\game\src\game.cpp
 	"Game.h"
 
-1619965260 c:\users\vhc\desktop\ltnc\game\include\game.h
-	"Threat.h"
+1620026962 c:\users\vhc\desktop\ltnc\game\include\game.h
 	"Menu.h"
 	"Bird.h"
 	<typeinfo>
 
-1619938948 source:c:\users\vhc\desktop\ltnc\game\src\threat.cpp
+1620025902 source:c:\users\vhc\desktop\ltnc\game\src\threat.cpp
 	"Threat.h"
 
-1619962416 source:c:\users\vhc\desktop\ltnc\game\src\text.cpp
+1620027041 source:c:\users\vhc\desktop\ltnc\game\src\text.cpp
 	"Text.h"
 
-1619962416 c:\users\vhc\desktop\ltnc\game\include\text.h
+1620027013 c:\users\vhc\desktop\ltnc\game\include\text.h
 	<SDL_ttf.h>
-	<iostream>
 	"LTexture.h"
 
-1619943695 source:c:\users\vhc\desktop\ltnc\game\src\main.cpp
+1620009989 source:c:\users\vhc\desktop\ltnc\game\src\main.cpp
 	"Game.h"
-	<iostream>
 
-1619963948 source:c:\users\vhc\desktop\ltnc\game\src\menu.cpp
+1620032824 source:c:\users\vhc\desktop\ltnc\game\src\menu.cpp
 	"Menu.h"
 
-1619891705 c:\users\vhc\desktop\ltnc\game\include\menu.h
+1620022640 c:\users\vhc\desktop\ltnc\game\include\menu.h
 	"Text.h"
 	"SDL_mixer.h"
 

@@ -4,7 +4,7 @@
 const int SCREEN_WIDTH = 700;
 const int SCREEN_HEIGHT = 760;
 
-const int gravity = 1;
+const int frame = 4;
 const int option = 2;
 
 #endif // CONFIG_H

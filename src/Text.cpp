@@ -19,6 +19,7 @@ Text::~Text()
 	TTF_Quit();
 }
 
+// hàm đặt màu cho text
 void Text::setColor( const int& type )
 {
     if( type == WHITE_TEXT )
@@ -31,27 +32,13 @@ void Text::setColor( const int& type )
         textColor = { 255, 117, 26 };
     }
 
-    if( type == RED_TEXT )
-    {
-        textColor = { 255, 51, 0 };
-    }
-
     if( type == GREEN_TEXT )
     {
         textColor = { 0, 204, 0 };
     }
-
-    if( type == YELLOW_TEXT )
-    {
-        textColor = { 255, 204, 0 };
-    }
-
-    if( type == BLUE_TEXT )
-    {
-        textColor = { 50, 150, 255 };
-    }
 }
 
+// hàm load chữ, cỡ chữ, font chữ
 bool Text::loadText( string s, SDL_Renderer* gRenderer, int size )
 {
 	//Loading success flag
@@ -66,7 +53,6 @@ bool Text::loadText( string s, SDL_Renderer* gRenderer, int size )
 	}
 	else
 	{
-		//Render text
 		if( !text.loadFromRenderedText( s, textColor, gRenderer, gFont ) )
 		{
 			printf( "Failed to render text texture!\n" );
@@ -77,6 +63,7 @@ bool Text::loadText( string s, SDL_Renderer* gRenderer, int size )
 	return success;
 }
 
+// hàm vẽ text lên màn hình
 void Text::renderText( SDL_Renderer* gRenderer, int x_text, int y_text )
 {
     text.render( gRenderer, x_text, y_text);
