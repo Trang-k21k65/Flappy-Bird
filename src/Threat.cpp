@@ -11,7 +11,7 @@ Threat::~Threat()
     threat.free();
 }
 
-// hàm set chiều cao bỏ đi của threat(cột)
+// hàm set chiều cao bỏ đi của threats
 void Threat::set_threat_height()
 {
     x_threat = SCREEN_WIDTH;
@@ -19,7 +19,7 @@ void Threat::set_threat_height()
     threat_height = height;
 }
 
-// hàm vẽ threat(cột) lên màn hình
+// hàm vẽ threats lên màn hình
 void Threat::renderThreat( SDL_Renderer *gRenderer )
 {
     clipThreat.x = 0;

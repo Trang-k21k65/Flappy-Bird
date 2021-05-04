@@ -210,9 +210,7 @@ void Game::gamePlay()
     {
         quit = true;
     }
-
-    // do-while loop handles option: play again or exit the game
-    do
+    else
     {
         // show tap play screen
         int tap_play_menu = gMenu.showTapPlay( gRenderer );
@@ -221,187 +219,192 @@ void Game::gamePlay()
             quit = true;
         }
 
-        // set feature for threats
-        gThreat[0].set_threat_height();
-        gThreat[1].set_threat_height();
-        gThreat[2].set_threat_height();
-
-        // set co-ordinate at first for bird
-        gBird.set_x_bird( 150 );
-        gBird.set_y_bird( 150 );
-        gBird.setFrameClips( gRenderer );
-
-        // variable denotes speed of background at main play screen
-        int x = 0;
-
-        // variables denote score
-        gScore.setColor( Text::WHITE_TEXT );
-        score_val = 0;
-        string score, best;
-        bool collision = false; // biến = false nếu bird không va chạm với rect điểm; = true nếu va chạm
-        bool addScore = true; // biến kiểm tra xem điểm có cộng thêm hay không
-
-        // variables denote play/pause
-        SDL_Rect icon_rect = { 50, 50, 40, 40 };
-        int xpos = 0, ypos = 0; // tọa độ chuột trên màn hình
-        int count = 0; // count chẵn thì ở trạng thái play; count lẻ thì ở trạng thái pause
-
-        //While gameloop is running
-        while( !quit )
+        // do-while loop handles option: play again or exit the game
+        do
         {
-            //Handle events
-            while( SDL_PollEvent(&e) != 0 )
+            // set feature for threats
+            gThreat[0].set_threat_height();
+            gThreat[1].set_threat_height();
+            gThreat[2].set_threat_height();
+
+            // set co-ordinate at first for bird
+            gBird.set_x_bird( 150 );
+            gBird.set_y_bird( 150 );
+            gBird.setFrameClips( gRenderer );
+
+            // variable denotes speed of background at main play screen
+            int x = 0;
+
+            // variables denote score
+            gScore.setColor( Text::WHITE_TEXT );
+            score_val = 0;
+            string score, best;
+            bool collision = false; // biến = false nếu bird không va chạm với rect điểm; = true nếu va chạm
+            bool addScore = true; // biến kiểm tra xem điểm có cộng thêm hay không
+
+            // variables denote play/pause
+            SDL_Rect icon_rect = { 50, 50, 40, 40 };
+            int xpos = 0, ypos = 0; // tọa độ chuột trên màn hình
+            int count = 0; // count chẵn thì ở trạng thái play; count lẻ thì ở trạng thái pause
+
+            //While gameloop is running
+            while( !quit )
             {
-                if( e.type == SDL_QUIT )
+                //Handle events
+                while( SDL_PollEvent(&e) != 0 )
                 {
-                    quit = true;
-                }
-
-                if( e.type == SDL_MOUSEMOTION )
-                {
-                    SDL_GetMouseState( &xpos, &ypos );
-
-                    if( checkFocusMouse( xpos, ypos, icon_rect ) )
+                    if( e.type == SDL_QUIT )
                     {
-                        gBird.is_click_icon = true;
+                        quit = true;
                     }
-                    else gBird.is_click_icon = false;
-                }
 
-                if( e.type == SDL_MOUSEBUTTONDOWN )
-                {
-                    SDL_GetMouseState( &xpos, &ypos );
-
-                    if( checkFocusMouse( xpos, ypos, icon_rect ) )
+                    if( e.type == SDL_MOUSEMOTION )
                     {
-                        Mix_PlayChannel( -1, gMusic[0], 0 );
-                        count++;
+                        SDL_GetMouseState( &xpos, &ypos );
+
+                        if( checkFocusMouse( xpos, ypos, icon_rect ) )
+                        {
+                            gBird.is_click_icon = true;
+                        }
+                        else gBird.is_click_icon = false;
                     }
+
+                    if( e.type == SDL_MOUSEBUTTONDOWN )
+                    {
+                        SDL_GetMouseState( &xpos, &ypos );
+
+                        if( checkFocusMouse( xpos, ypos, icon_rect ) )
+                        {
+                            Mix_PlayChannel( -1, gMusic[0], 0 );
+                            count++;
+                        }
+                    }
+
+                    gBird.handleEvents( e, gMusic[1] );
                 }
 
-                gBird.handleEvents( e, gMusic[1] );
-            }
+                SDL_SetRenderDrawColor( gRenderer, 255, 255, 255, 0 );
+                SDL_RenderClear( gRenderer );
 
-            SDL_SetRenderDrawColor( gRenderer, 255, 255, 255, 0 );
-            SDL_RenderClear( gRenderer );
+                // set velocity for background
+                if( count % 2 == 1 ) x -= 0;
+                else x -= 4;
 
-            // set velocity for background
-            if( count % 2 == 1 ) x -= 0;
-            else x -= 4;
+                // render background
+                gBackground.render( gRenderer, x, 0 );
+                gBackground.render( gRenderer, SCREEN_WIDTH + x, 0 );
 
-            // render background
-            gBackground.render( gRenderer, x, 0 );
-            gBackground.render( gRenderer, SCREEN_WIDTH + x, 0 );
+                if( -x == SCREEN_WIDTH ) x = 0;
 
-            if( -x == SCREEN_WIDTH ) x = 0;
+                // render threats on the screen
+                if( gThreat[0].x_threat >= 0 )
+                {
+                    gThreat[1].x_threat = gThreat[0].x_threat + SCREEN_WIDTH / 3;
+                    gThreat[2].x_threat = gThreat[1].x_threat + SCREEN_WIDTH / 3;
+                }
+                else
+                {
+                    gThreat[0] = gThreat[1];
+                    gThreat[1] = gThreat[2];
+                    gThreat[2].set_threat_height();
+                }
 
-            // render threats on the screen
-            if( gThreat[0].x_threat >= 0 )
-            {
-                gThreat[1].x_threat = gThreat[0].x_threat + SCREEN_WIDTH / 3;
-                gThreat[2].x_threat = gThreat[1].x_threat + SCREEN_WIDTH / 3;
-            }
-            else
-            {
-                gThreat[0] = gThreat[1];
-                gThreat[1] = gThreat[2];
-                gThreat[2].set_threat_height();
-            }
-
-            for( int i = 0; i < 3; i++ )
-            {
-                gThreat[i].renderThreat( gRenderer );
-            }
-
-            // render play, pause icon and handle play/pause option
-            play.render( gRenderer, icon_rect.x, icon_rect.y );
-            if( count % 2 == 1 )
-            {
-                pause.render( gRenderer, icon_rect.x, icon_rect.y );
                 for( int i = 0; i < 3; i++ )
                 {
-                    gThreat[i].pause_threat = true;
+                    gThreat[i].renderThreat( gRenderer );
                 }
-                gBird.pause_bird = true;
-            }
-            else
-            {
+
+                // render play, pause icon and handle play/pause option
                 play.render( gRenderer, icon_rect.x, icon_rect.y );
+                if( count % 2 == 1 )
+                {
+                    pause.render( gRenderer, icon_rect.x, icon_rect.y );
+                    for( int i = 0; i < 3; i++ )
+                    {
+                        gThreat[i].pause_threat = true;
+                    }
+                    gBird.pause_bird = true;
+                }
+                else
+                {
+                    play.render( gRenderer, icon_rect.x, icon_rect.y );
+                    for( int i = 0; i < 3; i++ )
+                    {
+                        gThreat[i].pause_threat = false;
+                    }
+                    gBird.pause_bird = false;
+                }
+
+                // handle bird move and render bird
+                gBird.handleMoveBird();
+                gBird.renderBird( gRenderer );
+
+                // check collision between bird and threats
                 for( int i = 0; i < 3; i++ )
                 {
-                    gThreat[i].pause_threat = false;
+                    bool check1 = gBird.checkCollision( gBird.get_RectBird(), gThreat[i].get_RectCol1() );
+                    bool check2 = gBird.checkCollision( gBird.get_RectBird(), gThreat[i].get_RectCol2() );
+                    if( check1 || check2 )
+                    {
+                        Mix_PlayChannel( -1, gMusic[3] , 0);
+                        quit = true;
+                        break;
+                    }
                 }
-                gBird.pause_bird = false;
-            }
 
-            // handle bird move and render bird
-            gBird.handleMoveBird();
-            gBird.renderBird( gRenderer );
-
-            // check collision between bird and threats
-            for( int i = 0; i < 3; i++ )
-            {
-                bool check1 = gBird.checkCollision( gBird.get_RectBird(), gThreat[i].get_RectCol1() );
-                bool check2 = gBird.checkCollision( gBird.get_RectBird(), gThreat[i].get_RectCol2() );
-                if( check1 || check2 )
+                // check collision between bird and edges of the screen
+                if( gBird.get_y_bird() + 33 < 0 || gBird.get_y_bird() + 67 > GROUND_HEIGHT )
                 {
                     Mix_PlayChannel( -1, gMusic[3] , 0);
                     quit = true;
-                    break;
                 }
-            }
 
-            // check collision between bird and edges of the screen
-            if( gBird.get_y_bird() + 33 < 0 || gBird.get_y_bird() + 67 > GROUND_HEIGHT )
-            {
-                Mix_PlayChannel( -1, gMusic[3] , 0);
-                quit = true;
-            }
-
-            // handle score
-            for( int i = 0; i < 3; i++ )
-            {
-                bool check = gBird.checkCollision( gBird.get_RectBird(), gThreat[i].get_RectBlank() );
-                if( check == true )
+                // handle score
+                for( int i = 0; i < 3; i++ )
                 {
-                    collision = true;
-                    break;
+                    bool check = gBird.checkCollision( gBird.get_RectBird(), gThreat[i].get_RectBlank() );
+                    if( check == true )
+                    {
+                        collision = true;
+                        break;
+                    }
+                    else collision = false;
                 }
-                else collision = false;
-            }
 
-            if( collision == true )
-            {
-                if( addScore == true )
+                if( collision == true )
                 {
-                    score_val++;
-                    Mix_PlayChannel( -1, gMusic[2], 0);
+                    if( addScore == true )
+                    {
+                        score_val++;
+                        Mix_PlayChannel( -1, gMusic[2], 0);
+                    }
+                    addScore = false;
                 }
-                addScore = false;
+                else addScore = true;
+
+                score = to_string( score_val );
+
+                // show score on the screen
+                gScore.loadText( score, gRenderer, 50 );
+                gScore.renderText( gRenderer, SCREEN_WIDTH / 2, 100 );
+
+                SDL_RenderPresent( gRenderer );
             }
-            else addScore = true;
 
-            score = to_string( score_val );
+            if( best_score < score_val ) best_score = score_val;
+            best = to_string( best_score );
 
-            // show score on the screen
-            gScore.loadText( score, gRenderer, 50 );
-            gScore.renderText( gRenderer, SCREEN_WIDTH / 2, 100 );
+            // show the gameover screen when the game is lost
+            int gameover_menu = gMenu.showGameOver( gRenderer, gMusic[0], score , best );
 
-            SDL_RenderPresent( gRenderer );
-        }
+            if( gameover_menu == 0 )
+            {
+                quit = false;
+                is_play_again = 1;
+                gMenu.showTapPlay( gRenderer );
+            }
+            else is_play_again = 0;
 
-        if( best_score < score_val ) best_score = score_val;
-        best = to_string( best_score );
-
-        // show the gameover screen when the game is lost
-        int gameover_menu = gMenu.showGameOver( gRenderer, gMusic[0], score , best );
-
-        if( gameover_menu == 0 )
-        {
-            quit = false;
-            is_play_again = 1;
-        }
-        else is_play_again = 0;
-
-    }while( is_play_again != 0 );
+        }while( is_play_again != 0 );
+    }
 }

@@ -14,7 +14,7 @@ LTexture::~LTexture()
     free();
 }
 
-// hàm load ảnh từ đường dẫn truyền vào
+// hàm tạo texture từ ảnh nhờ đường dẫn truyền vào
 bool LTexture::loadFromFile( string path, SDL_Renderer* gRenderer )
 {
 	//Get rid of preexisting texture
