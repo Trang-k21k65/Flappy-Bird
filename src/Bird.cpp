@@ -73,7 +73,7 @@ void Bird::renderBird( SDL_Renderer *gRenderer )
     if( current_frame / 4 >= frame ) current_frame = 0;
 }
 
-// hàm xử lí xự kiện cho con bird, khi bay lên thì sẽ có tiếng
+// hàm xử lí xự kiện cho con bird
 void Bird::handleEvents( SDL_Event& event, Mix_Chunk* wing )
 {
     // mouse event

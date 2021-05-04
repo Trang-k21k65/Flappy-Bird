@@ -352,7 +352,7 @@ void Game::gamePlay()
             }
 
             // check collision between bird and edges of the screen
-            if( gBird.get_y_bird() + 33 < 0 || gBird.get_y_bird() + 67 > 640 )
+            if( gBird.get_y_bird() + 33 < 0 || gBird.get_y_bird() + 67 > GROUND_HEIGHT )
             {
                 Mix_PlayChannel( -1, gMusic[3] , 0);
                 quit = true;

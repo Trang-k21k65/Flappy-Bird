@@ -33,7 +33,6 @@ class Bird
         SDL_Rect frameClips[frame];
         int current_frame;
 
-
 };
 
 #endif // BIRD_H
