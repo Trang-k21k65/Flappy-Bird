@@ -17,7 +17,7 @@ class Text
         };
 
         Text();
-        virtual ~Text();
+        ~Text();
 
         void setColor( const int& type );
         bool loadText( string s, SDL_Renderer* gRenderer, int size );

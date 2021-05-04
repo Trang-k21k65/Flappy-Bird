@@ -258,22 +258,10 @@ void Game::gamePlay()
                         quit = true;
                     }
 
-                    if( e.type == SDL_MOUSEMOTION )
+                    // press "s" to pause the game
+                    if( e.type == SDL_KEYDOWN )
                     {
-                        SDL_GetMouseState( &xpos, &ypos );
-
-                        if( checkFocusMouse( xpos, ypos, icon_rect ) )
-                        {
-                            gBird.is_click_icon = true;
-                        }
-                        else gBird.is_click_icon = false;
-                    }
-
-                    if( e.type == SDL_MOUSEBUTTONDOWN )
-                    {
-                        SDL_GetMouseState( &xpos, &ypos );
-
-                        if( checkFocusMouse( xpos, ypos, icon_rect ) )
+                        if( e.key.keysym.sym == SDLK_s )
                         {
                             Mix_PlayChannel( -1, gMusic[0], 0 );
                             count++;

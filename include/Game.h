@@ -9,7 +9,7 @@ class Game : public LTexture
 {
     public:
         Game();
-        virtual ~Game();
+        ~Game();
 
         bool init();
         bool loadImage();

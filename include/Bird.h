@@ -8,7 +8,7 @@ class Bird
 {
     public:
         Bird();
-        virtual ~Bird();
+        ~Bird();
 
         void renderBird( SDL_Renderer* gRenderer );
         void setFrameClips( SDL_Renderer* gRenderer );
@@ -22,7 +22,6 @@ class Bird
         int get_y_bird();
 
         bool pause_bird;
-        bool is_click_icon; // biến trả về false nếu tọa độ chuột không nằm trong play/pause icon
 
     private:
         LTexture bird;

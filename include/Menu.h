@@ -14,7 +14,7 @@ class Menu: public LTexture
 {
     public:
         Menu();
-        virtual ~Menu();
+        ~Menu();
 
         int showStart( SDL_Renderer* gRenderer, Mix_Chunk* tap);
         int showTapPlay( SDL_Renderer* gRenderer );

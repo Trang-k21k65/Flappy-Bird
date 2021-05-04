@@ -10,7 +10,7 @@ class Threat
 {
     public:
         Threat();
-        virtual ~Threat();
+        ~Threat();
 
         void set_threat_height();
         void renderThreat( SDL_Renderer *gRenderer );

@@ -9,7 +9,6 @@ Bird::Bird()
     y_bird = 100;
 
     pause_bird = false;
-    is_click_icon = false;
 }
 
 Bird::~Bird()
@@ -84,7 +83,7 @@ void Bird::handleEvents( SDL_Event& event, Mix_Chunk* wing )
             if( !pause_bird )
             {
                 speed_bird = -4;
-                if( !is_click_icon ) Mix_PlayChannel( -1, wing, 0);
+                Mix_PlayChannel( -1, wing, 0);
             }
             else speed_bird = 0;
         }
@@ -121,7 +120,6 @@ void Bird::handleEvents( SDL_Event& event, Mix_Chunk* wing )
             else speed_bird = 0;
         }
     }
-
 }
 
 void Bird::handleMoveBird()

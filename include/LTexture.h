@@ -13,7 +13,7 @@ class LTexture
 {
 	public:
 		LTexture();
-		virtual ~LTexture();
+		~LTexture();
 
 		bool loadFromFile( string path, SDL_Renderer* gRenderer );
 		bool loadFromRenderedText( string textureText, SDL_Color textColor, SDL_Renderer* gRenderer, TTF_Font *gFont );
