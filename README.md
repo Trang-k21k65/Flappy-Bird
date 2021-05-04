@@ -3,6 +3,7 @@
 ## Game Structure
 
 Sử dụng C++ và thư viện SDL2
+scr: chứa file .cpp & include: chứa file .h
 
 ### Các đối tượng có trong game
 * bird: bay lên hoặc bay xuống.
