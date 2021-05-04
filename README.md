@@ -1,5 +1,6 @@
 # Game
-// include: include file .cpp // scr: include file .h // img: include images used in project
+// include: include file .cpp 
+// scr: include file .h 
 
 Config: declare consts used in project
 LTexture: creature texture, render texture, etc.
