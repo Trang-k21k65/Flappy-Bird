@@ -225,7 +225,7 @@ int Menu::showGameOver( SDL_Renderer* gRenderer, Mix_Chunk* tap, string mark, st
 		return 1;
 	}
 
-    // Set rect chi gameover_rect
+    // Set rect of gameover_rect
 	gameover_pos[0].x = 130;
 	gameover_pos[0].y = 480;
 	gameover_pos[0].h = GAMEOVER_HEIGHT;

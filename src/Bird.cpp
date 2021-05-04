@@ -3,11 +3,11 @@
 Bird::Bird()
 {
     speed_bird = 0;
+    current_frame = 0;
 
     x_bird = 100;
     y_bird = 100;
 
-    die = false;
     pause_bird = false;
     is_click_icon = false;
 }
@@ -15,12 +15,26 @@ Bird::Bird()
 Bird::~Bird()
 {
     bird.free();
-    bird_animated.free();
 }
 
-/*void Bird::setAnimated( SDL_Renderer *gRenderer )
+void Bird::set_x_bird( int val )
 {
-    if( !bird_animated.loadFromFile( "image/animated.png", gRenderer ) )
+    x_bird = val;
+}
+
+void Bird::set_y_bird( int val )
+{
+    y_bird = val;
+}
+
+int Bird::get_y_bird()
+{
+    return y_bird;
+}
+
+void Bird::setFrameClips( SDL_Renderer *gRenderer )
+{
+    if( !bird.loadFromFile( "image/animated.png", gRenderer ) )
 	{
 		printf( "Failed to load bird_animated texture!\n" );
 	}
@@ -51,25 +65,12 @@ Bird::~Bird()
 
 void Bird::renderBird( SDL_Renderer *gRenderer )
 {
-    int current_frame = 0;
-
-    SDL_SetRenderDrawColor( gRenderer, 255, 255, 255, 0 );
-    SDL_RenderClear( gRenderer );
-
     SDL_Rect* currentClip = &frameClips[ current_frame / 4 ];
-    bird_animated.render( gRenderer, x_bird, y_bird, currentClip );
+    SDL_Delay(15);
+    bird.render( gRenderer, x_bird, y_bird, currentClip );
 
-    current_frame++;
-
-    if( current_frame / 4 >= frame )
-    {
-        current_frame = 0;
-    }
-}*/
-
-void Bird::renderBird( SDL_Renderer *gRenderer )
-{
-    bird.render( gRenderer, x_bird, y_bird );
+    if( !pause_bird ) current_frame++;
+    if( current_frame / 4 >= frame ) current_frame = 0;
 }
 
 // hàm xử lí xự kiện cho con bird, khi bay lên thì sẽ có tiếng
@@ -80,7 +81,7 @@ void Bird::handleEvents( SDL_Event& event, Mix_Chunk* wing )
     {
         if( event.button.button == SDL_BUTTON_LEFT )
         {
-            if( !die && !pause_bird )
+            if( !pause_bird )
             {
                 speed_bird = -4;
                 if( !is_click_icon ) Mix_PlayChannel( -1, wing, 0);
@@ -93,7 +94,7 @@ void Bird::handleEvents( SDL_Event& event, Mix_Chunk* wing )
     {
         if( event.button.button == SDL_BUTTON_LEFT )
         {
-            if( !die && !pause_bird ) speed_bird = 4;
+            if( !pause_bird ) speed_bird = 4;
             else speed_bird = 0;
         }
     }
@@ -103,7 +104,7 @@ void Bird::handleEvents( SDL_Event& event, Mix_Chunk* wing )
     {
         if( event.key.keysym.sym == SDLK_SPACE )
         {
-            if( !die && !pause_bird )
+            if( !pause_bird )
             {
                 speed_bird = -4;
                 Mix_PlayChannel( -1, wing, 0);
@@ -116,7 +117,7 @@ void Bird::handleEvents( SDL_Event& event, Mix_Chunk* wing )
     {
         if( event.key.keysym.sym == SDLK_SPACE )
         {
-            if( !die && !pause_bird ) speed_bird = 4;
+            if( !pause_bird ) speed_bird = 4;
             else speed_bird = 0;
         }
     }
@@ -126,11 +127,6 @@ void Bird::handleEvents( SDL_Event& event, Mix_Chunk* wing )
 void Bird::handleMoveBird()
 {
     if( !pause_bird ) y_bird += speed_bird;
-
-    if( y_bird + 37 < 0 || y_bird + 61 > 640 )
-    {
-        die = true;
-    }
 }
 
 // hàm kiểm tra va chạm giữa 2 rect
@@ -152,9 +148,9 @@ SDL_Rect Bird::get_RectBird()
 {
     SDL_Rect rect;
 
-    rect.x = x_bird + 28;
-    rect.y = y_bird + 30;
-    rect.w = 40;
+    rect.x = x_bird + 27;
+    rect.y = y_bird + 34;
+    rect.w = 44;
     rect.h = 34;
 
     return rect;

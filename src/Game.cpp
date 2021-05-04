@@ -45,7 +45,7 @@ Game::~Game()
 	SDL_Quit();
 }
 
-// hàm khởi tạo window, bút vẽ, thư viện ảnh & kiểu ảnh, thư viện font chữ, thư viện mixer
+// function load libraries used in the game, create window && renderer
 bool Game::init()
 {
 	//Initialization flag
@@ -59,13 +59,7 @@ bool Game::init()
 	}
 	else
 	{
-		//Set texture filtering to linear
-		if( !SDL_SetHint( SDL_HINT_RENDER_SCALE_QUALITY, "1" ) )
-		{
-			printf( "Warning: Linear texture filtering not enabled!" );
-		}
-
-		//Create window
+		// Create window
 		gWindow = SDL_CreateWindow( "Flappy Bird", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_SHOWN );
 		if( gWindow == NULL )
 		{
@@ -74,7 +68,7 @@ bool Game::init()
 		}
 		else
 		{
-			//Create vsynced renderer for window
+			// Create renderer for window
 			gRenderer = SDL_CreateRenderer( gWindow, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC );
 			if( gRenderer == NULL )
 			{
@@ -114,7 +108,7 @@ bool Game::init()
 	return success;
 }
 
-// hàm load ảnh trong màn hình chơi chính
+// function load images used in the main program in the game
 bool Game::loadImage()
 {
     bool success = true;
@@ -140,13 +134,6 @@ bool Game::loadImage()
 		success = false;
 	}
 
-	// load bird
-	if( !gBird.bird.loadFromFile( "image/bird.png", gRenderer ) )
-    {
-        printf( "Failed to load bird texture!\n" );
-		success = false;
-    }
-
     // load threat
     if( !gThreat[0].threat.loadFromFile( "image/pipe.png", gRenderer ) )
     {
@@ -169,7 +156,7 @@ bool Game::loadImage()
     return success;
 }
 
-// hàm load âm thanh
+// function load sounds used in the game
 bool Game::loadMixer()
 {
     bool success = true;
@@ -209,32 +196,32 @@ bool Game::loadMixer()
     return success;
 }
 
-// hàm viết chương trình chính trong game
+// function to write the main program in the game
 void Game::gamePlay()
 {
     // variables adjust gameloop
-    bool play_again = 1; // 1: chơi tiếp; 0: thoát
+    bool is_play_again = 1; // 1: play agian ; 0: exit
     bool quit = false;
     SDL_Event e;
 
-    // show màn hình start lúc bắt đầu game
+    // shows the start screen at the start of the game
     int start_menu = gMenu.showStart( gRenderer, gMusic[0] );
     if( start_menu == 1 )
     {
         quit = true;
     }
 
-    // vòng lặp do-while để chọn chơi lại hay thoát game
+    // do-while loop handles option: play again or exit the game
     do
     {
-        // show màn hình tap play
+        // show tap play screen
         int tap_play_menu = gMenu.showTapPlay( gRenderer );
         if( tap_play_menu == 1 )
         {
             quit = true;
         }
 
-        // set feature for threat(cot)
+        // set feature for threats
         gThreat[0].set_threat_height();
         gThreat[1].set_threat_height();
         gThreat[2].set_threat_height();
@@ -242,6 +229,7 @@ void Game::gamePlay()
         // set co-ordinate at first for bird
         gBird.set_x_bird( 150 );
         gBird.set_y_bird( 150 );
+        gBird.setFrameClips( gRenderer );
 
         // variable denotes speed of background at main play screen
         int x = 0;
@@ -297,6 +285,7 @@ void Game::gamePlay()
             SDL_SetRenderDrawColor( gRenderer, 255, 255, 255, 0 );
             SDL_RenderClear( gRenderer );
 
+            // set velocity for background
             if( count % 2 == 1 ) x -= 0;
             else x -= 4;
 
@@ -306,7 +295,7 @@ void Game::gamePlay()
 
             if( -x == SCREEN_WIDTH ) x = 0;
 
-            // render threat(cot)
+            // render threats on the screen
             if( gThreat[0].x_threat >= 0 )
             {
                 gThreat[1].x_threat = gThreat[0].x_threat + SCREEN_WIDTH / 3;
@@ -345,16 +334,16 @@ void Game::gamePlay()
                 gBird.pause_bird = false;
             }
 
-            // render bird
-            gBird.renderBird( gRenderer );
+            // handle bird move and render bird
             gBird.handleMoveBird();
+            gBird.renderBird( gRenderer );
 
-            // check collision between bird and threat(cot)
+            // check collision between bird and threats
             for( int i = 0; i < 3; i++ )
             {
                 bool check1 = gBird.checkCollision( gBird.get_RectBird(), gThreat[i].get_RectCol1() );
                 bool check2 = gBird.checkCollision( gBird.get_RectBird(), gThreat[i].get_RectCol2() );
-                if( check1 || check2 || gBird.isDie() == true )
+                if( check1 || check2 )
                 {
                     Mix_PlayChannel( -1, gMusic[3] , 0);
                     quit = true;
@@ -362,7 +351,14 @@ void Game::gamePlay()
                 }
             }
 
-            // xử lí điểm
+            // check collision between bird and edges of the screen
+            if( gBird.get_y_bird() + 33 < 0 || gBird.get_y_bird() + 67 > 640 )
+            {
+                Mix_PlayChannel( -1, gMusic[3] , 0);
+                quit = true;
+            }
+
+            // handle score
             for( int i = 0; i < 3; i++ )
             {
                 bool check = gBird.checkCollision( gBird.get_RectBird(), gThreat[i].get_RectBlank() );
@@ -387,7 +383,7 @@ void Game::gamePlay()
 
             score = to_string( score_val );
 
-            // hiển thị điểm trên màn hình
+            // show score on the screen
             gScore.loadText( score, gRenderer, 50 );
             gScore.renderText( gRenderer, SCREEN_WIDTH / 2, 100 );
 
@@ -397,15 +393,15 @@ void Game::gamePlay()
         if( best_score < score_val ) best_score = score_val;
         best = to_string( best_score );
 
-        // hiển thị màn hình gameover khi chơi thua
+        // show the gameover screen when the game is lost
         int gameover_menu = gMenu.showGameOver( gRenderer, gMusic[0], score , best );
 
         if( gameover_menu == 0 )
         {
             quit = false;
-            play_again = 1;
+            is_play_again = 1;
         }
-        else play_again = 0;
+        else is_play_again = 0;
 
-    }while( play_again != 0 );
+    }while( is_play_again != 0 );
 }

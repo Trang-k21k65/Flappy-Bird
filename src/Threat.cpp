@@ -32,27 +32,27 @@ void Threat::renderThreat( SDL_Renderer *gRenderer )
     threat.render( gRenderer, x_threat, 0, &clipThreat);
 }
 
-// hàm lấy các chỉ số của rect of threat(côt) trên
+// hàm lấy các chỉ số của rect of threat trên
 SDL_Rect Threat::get_RectCol1()
 {
     SDL_Rect rect;
 
-    rect.x = x_threat + 2;
-    rect.y = -3;
-    rect.w = 50;
+    rect.x = x_threat + 1;
+    rect.y = 6;
+    rect.w = 52;
     rect.h = THREAT_HEIGHT - threat_height;
 
     return rect;
 }
 
-// hàm lấy các chỉ số của rect of threat(cột) dưới
+// hàm lấy các chỉ số của rect of threat dưới
 SDL_Rect Threat::get_RectCol2()
 {
     SDL_Rect rect;
 
-    rect.x = x_threat + 2;
-    rect.y = BLANK + THREAT_HEIGHT - threat_height - 4;
-    rect.w = 50;
+    rect.x = x_threat + 1;
+    rect.y = BLANK + THREAT_HEIGHT - threat_height - 6;
+    rect.w = 52;
     rect.h = 640 - rect.y;
 
     return rect;
